@@ -1,8 +1,5 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
+\application::is_breakin();
 
 class base {
 
@@ -27,9 +24,9 @@ class base {
 	}
 		
 	protected function get_cache_connect(){
-		if(PFW_CACHE_ENABLED){
+		if(KKF_CACHE_ENABLED){
 			if(!is_object($this->cache)){
-				$this->cache= new ezcache(PFW_REDIS_HOST, PFW_REDIS_PORT);
+				$this->cache= new ezcache(KKF_REDIS_HOST, KKF_REDIS_PORT);
 				$this->cache->enable_log($this->log);
 			}
 		}
@@ -56,13 +53,13 @@ class base {
 	
 
 	private function load_classes($class_name){
-		
+
 		if(!helper::instr($class_name, "models\\")){
 			return;
 		}
 		
 		$class_name=str_replace("models\\", "", $class_name);
-		$filename= PFW_MODELS_PATH . "/" . $class_name . ".class.php";
+		$filename= KKF_MODELS_PATH . "/" . $class_name . ".class.php";
 
 		if(file_exists($filename)){
 			require_once $filename;

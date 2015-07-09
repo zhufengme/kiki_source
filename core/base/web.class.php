@@ -1,10 +1,6 @@
 <?php
 namespace controllers;
-
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
+\application::is_breakin();
 
 class web extends \base {
 
