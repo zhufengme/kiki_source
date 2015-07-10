@@ -1,6 +1,7 @@
 <?php
-\application::is_breakin();
-
+if(!defined("KKF_INIT")){
+    die("break in");
+}
 class base {
 
 	protected $timestamp = false;

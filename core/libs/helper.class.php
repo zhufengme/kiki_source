@@ -1,10 +1,7 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
+if(!defined("KKF_INIT")){
+    die("break in");
 }
-
-
 
 /**
  * 

@@ -8,16 +8,8 @@ if ( (bool) (application::env("DEBUG")) ) {
     error_reporting ( 0 );
 }
 
-
 final class application {
 
-
-    final static function is_breakin(){
-        if(!defined("KKF_INIT")){
-            die("break in");
-        }
-        return;
-    }
 
     final static function env($key){
 
@@ -41,6 +33,13 @@ final class application {
 
     }
 
+    final static function config($section , $item){
+        $_result = null;
+        require_once KKF_CONFIG_PATH . DIRECTORY_SEPARATOR . $section . ".php";
+        $value = \helper::get_value_from_array($_result,$item);
+        return $value;
+    }
+
     final  static function define_path () {
 
         define ( "KKF_ROOT_PATH" , substr ( __DIR__ , 0 , strlen ( __DIR__ ) - 12 ) );
@@ -54,6 +53,9 @@ final class application {
         define ( 'KKF_VIEWS_PATH' , KKF_ROOT_PATH . DIRECTORY_SEPARATOR.  "views" );
         define ( 'KKF_CACHE_PATH' , KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "cache" );
         define ( 'KKF_STORE_PATH' , KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "store" );
+        define ( 'KKF_CONFIG_PATH' , KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "config" );
+        define ( 'KKF_WEB_PATH' , KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "web" );
+
 
         return;
     }
@@ -70,7 +72,27 @@ final class application {
         }
     }
 
-    final private static function load_controller ( $controller_name , $action_name ) {
+    final public static function load_controller () {
+
+        $parm = func_get_args();
+        $controller_target = \helper::get_value_from_array($parm,0,false);
+        if(!$controller_target){
+            die;
+        }
+
+        list($controller_name,$action_name) = explode("@",$controller_target);
+
+        if(!$action_name){
+            $action_name="main";
+        }
+
+        $param_string= null;
+        if(count($parm)>1){
+            for ($i=1;$i<count($parm);$i++){
+                $param_string.= $parm[$i].",";
+            }
+            $param_string=substr($param_string,0,strlen($param_string)-1);
+        }
 
         if ( ! file_exists ( KKF_CONTROLLERS_PATH . DIRECTORY_SEPARATOR . $controller_name . ".class.php" ) ) {
 
@@ -113,7 +135,7 @@ final class application {
             }
             die();
         }
-        $str = '$controller->' . $action_name . '();';
+        $str = '$controller->' . $action_name . '(' . $param_string . ');';
         eval ( $str );
         return;
 
@@ -125,13 +147,25 @@ final class application {
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'rest.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'web.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'models.class.php';
+
+        //require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'input.class.php';
+
         /*
         require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'ezsql' . DIRECTORY_SEPARATOR . 'ez_sql_core.php';
         require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'ezsql' . DIRECTORY_SEPARATOR . 'ez_sql_mysql.php';
         require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'database.class.php';
-        require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'input.class.php';
+
         */
         return;
+    }
+
+    final static function start (){
+        define ( 'KKF_INIT' , true );
+        self::load_bases();
+
+        if(self::is_web_request()){
+
+        }
     }
 
     final static function console_start ( $argv , $argc ) {
@@ -168,11 +202,12 @@ final class application {
             die ();
         }
 
-        if ( PFW_AUTO_SESSION_START ) {
+        if ( \application::config("http","session_auto_start") ) {
             session_start ();
         }
 
         $argvs = input::get_web_path ();
+
 
         /*
         if(!key_exists(0, $argvs)){
@@ -197,6 +232,7 @@ final class application {
         }
 
         $controller_name = $argvs[1];
+
         $action_name = "index";
 
         if(key_exists(2, $argvs)){
@@ -206,7 +242,8 @@ final class application {
 
         self::load_controller ( $controller_name, $action_name );
         */
-        self::load_controller ( "welcome" , "main" );
+
+        self::load_controller ( "welcome" , "main");
 
         return;
 

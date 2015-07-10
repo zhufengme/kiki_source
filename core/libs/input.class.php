@@ -1,8 +1,4 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
 
 class input{
 	

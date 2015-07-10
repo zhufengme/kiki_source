@@ -1,6 +1,5 @@
 <?php
 namespace controllers;
-\application::is_breakin();
 
 class web extends \base {
 

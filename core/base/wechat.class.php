@@ -1,10 +1,6 @@
 <?php
 namespace controllers;
 
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
 
 class wechat extends \base {
 	
