@@ -12,12 +12,19 @@ $_result = array (
 
         'log' => 'ezlog.class.php' ,
         'db' => 'database.class.php' ,
-
     ) ,
-
-
 );
 
 
 echo json_encode($_result);
 
+$s= json_encode($_result);
+
+print_r(json_decode($s));
+
+$obj = json_decode($s);
+
+foreach($obj->libs as $key => $value){
+    echo $key;
+    echo $value;
+}
