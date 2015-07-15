@@ -14,9 +14,29 @@ class base {
     function __construct () {
         $this->timestamp = self::get_timestamp();
         spl_autoload_register("self::load_classes");
+
         $this->load_lib("input");
+        $this->input = new \input();
+
         $this->load_lib("output");
+        $this->output = new \output();
+
         $this->load_lib("log");
+        if(\application::env("LOG_ENABLED")) {
+            if(!is_object($this->log)) {
+                $this->log = new \ezLog(\application::env("LOG_FILENAME"));
+                $this->log->set_record_level(\application::env("LOG_LEVEL"));
+            }
+        }
+
+        $this->load_lib("cache");
+        if(\application::env("CACHE_ENABLED")) {
+            if(!is_object($this->cache)) {
+                $this->cache = new \ezcache(\application::env("REDIS_HOST"), \application::env("REDIS_PORT"));
+                $this->cache->enable_log($this->log);
+            }
+        }
+
     }
 
     protected function fatal ($message) {
@@ -25,27 +45,10 @@ class base {
         die;
     }
 
-    protected function get_cache_connect () {
-        if(KKF_CACHE_ENABLED) {
-            if(!is_object($this->cache)) {
-                $this->cache = new ezcache(KKF_REDIS_HOST, KKF_REDIS_PORT);
-                $this->cache->enable_log($this->log);
-            }
-        }
-    }
-
     protected static function get_timestamp () {
         return time();
     }
 
-    private function get_log_connect () {
-        if(PFW_LOG_ENABLED) {
-            if(!is_object($this->log)) {
-                $this->log = new ezLog(PFW_LOG_FILENAME);
-                $this->log->set_record_level(PFW_LOG_LEVEL);
-            }
-        }
-    }
 
     function __get ($name) {
         $cmd_str = "\$result=\$this->get_{$name}();";
@@ -75,20 +78,16 @@ class base {
 
     final protected function load_lib ($lib_name) {
 
-        $libs = \application::config("app","libs");
+        $libs = \application::config("app", "libs");
 
-        if(!property_exists($libs,$lib_name)){
+        if(!property_exists($libs, $lib_name)) {
             throw new Exception("lib $lib_name not defined");
             return;
         }
 
         $lib = $libs->{$lib_name};
-
         require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . $lib;
-
-
         return;
-
 
         switch ($lib_name) {
             case "log":

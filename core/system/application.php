@@ -11,6 +11,7 @@ if((bool)(application::env("DEBUG"))) {
 final class application {
 
 
+
     final static function env ($key) {
 
         if(!defined('KKF_ENV')) {
