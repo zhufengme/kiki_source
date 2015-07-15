@@ -1,0 +1,6 @@
+{
+  "libs":{
+    "db":"database.class.php",
+    "log":"ezlog.class.php"
+  }
+}

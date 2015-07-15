@@ -33,11 +33,13 @@ final class application {
 
     }
 
-    final static function config($section , $item){
-        $_result = null;
-        require_once KKF_CONFIG_PATH . DIRECTORY_SEPARATOR . $section . ".php";
-        $value = \helper::get_value_from_array($_result,$item);
-        return $value;
+    final static function config($item){
+        $filename = KKF_CONFIG_PATH . DIRECTORY_SEPARATOR . $item . ".json";
+        if (!file_exists($filename)){
+            die("config file $item not found");
+        }
+        $result=file_get_contents($filename);
+        return json_decode($result);
     }
 
     final  static function define_path () {
@@ -202,7 +204,7 @@ final class application {
             die ();
         }
 
-        if ( \application::config("http","session_auto_start") ) {
+        if ( \application::config("http")->session_auto_start ) {
             session_start ();
         }
 
