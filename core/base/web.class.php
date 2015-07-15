@@ -14,7 +14,8 @@ class web extends \base {
 		}
 		$this->load_lib("view");
 	}
-	
+
+
 	protected function set_view($view_name,$default_lang,$default_device){
 		if(!$default_lang){
 			throw new \Exception("default lang must be set");

@@ -1,21 +1,27 @@
 <?php
 include_once '../core/system/application.php';
-print_r(application::config("app"));
+
+function load_lib ($lib_name) {
+
+    $libs = \application::config("app", "libs");
+
+    if(!property_exists($libs, $lib_name)) {
+        throw new Exception("lib $lib_name not defined");
+        return;
+    }
+
+    $lib = $libs->{$lib_name};
+
+    $filename = PFW_LIBS_PATH . DIRECTORY_SEPARATOR . $lib;
+    echo $filename;
+    require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . $lib;
 
 
-die;
+    return;
+}
 
+return;
 
-$_result = array(
-    "libs" => array (
-
-
-        'log' => "ezlog.class.php",
-        'db' => "database.class.php",
-    ),
-
-);
-
-$s= json_encode($_result);
+$s = json_encode($_result);
 
 echo $s;
