@@ -2,7 +2,6 @@
 
 class input{
 	
-	private $path = false;
 	private $http_get = false;
 	private $http_post = false;
 	private $http_post_raw = false;
@@ -21,7 +20,6 @@ class input{
 	}
 
 	public function __construct(){
-		$this->path = self::get_web_path();
 		$this->get_http_data();
 		$this->get_user_agent();
 	}
@@ -31,10 +29,10 @@ class input{
 	}
 	
 	private function get_user_agent(){
-		if(!application::is_web_request()){
+		if(!application::is_http_request()){
 			return;
 		}
-		require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'user_agent.class.php';
+		require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'user_agent.class.php';
 		$ua= helper::get_value_from_array($this->http_server, 'HTTP_USER_AGENT');
 		if($ua){
 			$this->user_agent=new user_agent($ua);
@@ -42,25 +40,9 @@ class input{
 		return;
 	}
 	
-	public static function get_web_path(){
-		if(!\application::is_web_request()){
-			return false;
-		}
-		$argvs=explode("/", $_SERVER["REQUEST_URI"]);
-		$result=false;
-		foreach ($argvs as $argv){
-			if($argv){
-				$result[]=$argv;
-			}
-		}
-		$result = helper::addslashes_deep($result);
-		
-		return $result;
-		
-	}
 
 	private function get_http_data(){
-		if(!\application::is_web_request()){
+		if(!\application::is_http_request()){
 			return false;
 		}
 		if (! get_magic_quotes_gpc ()) {

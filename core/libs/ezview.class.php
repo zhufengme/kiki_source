@@ -5,7 +5,7 @@ if(!PFW_INIT){
 	die;
 }
 
-require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'Smarty.class.php';
+require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'Smarty.class.php';
 
 class ezview {
 	

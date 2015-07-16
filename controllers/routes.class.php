@@ -1,11 +1,18 @@
 <?php
 namespace controllers;
+class routes extends \web {
 
+    final public static function enter($http_path){
 
-class routes extends web {
+        if(!$http_path) {
+            $welcome = new \controllers\welcome();
+            $welcome->main();
+        }
 
-    final public static function enter(){
-        
+        if($http_path[0]=="test"){
+           $test = new \controllers\test();
+           $test->main();
+        }
     }
 
 

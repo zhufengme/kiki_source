@@ -9,9 +9,6 @@ if((bool)(application::env("DEBUG"))) {
 }
 
 final class application {
-
-
-
     final static function env ($key) {
 
         if(!defined('KKF_ENV')) {
@@ -59,6 +56,7 @@ final class application {
 
         define("KKF_ROOT_PATH", substr(__DIR__, 0, strlen(__DIR__) - 12));
 
+
         define("KKF_CORE_PATH", KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "core");
         define("KKF_CONTROLLERS_PATH", KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "controllers");
         define('KKF_LIBS_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "libs");
@@ -79,7 +77,7 @@ final class application {
      *
      * 判断是否为web请求
      */
-    final static function is_web_request () {
+    final static function is_http_request () {
         if(empty ($_SERVER ['REQUEST_METHOD'])) {
             return false;
         } else {
@@ -111,7 +109,7 @@ final class application {
 
         if(!file_exists(KKF_CONTROLLERS_PATH . DIRECTORY_SEPARATOR . $controller_name . ".class.php")) {
 
-            if(self::is_web_request()) {
+            if(self::is_http_request()) {
                 header("HTTP/1.1 404 controller " . htmlspecialchars($controller_name) . " not found");
             } else {
                 echo "controller " . $controller_name . " not found \n";
@@ -125,7 +123,7 @@ final class application {
 
         if(!class_exists("\\controllers\\{$controller_name}", false)) {
 
-            if(self::is_web_request()) {
+            if(self::is_http_request()) {
                 header("HTTP/1.1 404 controller " . htmlspecialchars($controller_name) . " not define");
             } else {
                 echo("controller " . $controller_name . " not define \n");
@@ -159,6 +157,7 @@ final class application {
     final private static function load_bases () {
         require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'helper.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'base.class.php';
+        require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'http.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'rest.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'web.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'models.class.php';
@@ -178,9 +177,12 @@ final class application {
         define('KKF_INIT', true);
         self::load_bases();
 
-        if(self::is_web_request()) {
-
+        if(self::is_http_request()) {
+            $objHttp = new \http();
+            $objHttp->start();
+            return;
         }
+
     }
 
     final static function console_start ($argv, $argc) {

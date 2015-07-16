@@ -5,6 +5,10 @@ class ezcache{
 	private $log = false;
 	
 	function __construct($redis_host,$redis_port){
+		if(!in_array("redis",get_loaded_extensions())){
+			throw new Exception("phpredis not installed.");
+			return;
+		};
 		$this->get_redis_connect($redis_host, $redis_port);
 	}
 	

@@ -16,13 +16,17 @@ class base {
         spl_autoload_register("self::load_classes");
 
         $this->load_lib("input");
-        $this->input = new \input();
+        if(!is_object($this->input)) {
+            $this->input = new \input();
+        }
 
         $this->load_lib("output");
-        $this->output = new \output();
+        if(!is_object($this->output)) {
+            $this->output = new \output();
+        }
 
         $this->load_lib("log");
-        if(\application::env("LOG_ENABLED")) {
+        if((bool)\application::env("LOG_ENABLED")) {
             if(!is_object($this->log)) {
                 $this->log = new \ezLog(\application::env("LOG_FILENAME"));
                 $this->log->set_record_level(\application::env("LOG_LEVEL"));
@@ -30,7 +34,7 @@ class base {
         }
 
         $this->load_lib("cache");
-        if(\application::env("CACHE_ENABLED")) {
+        if((bool)\application::env("CACHE_ENABLED")) {
             if(!is_object($this->cache)) {
                 $this->cache = new \ezcache(\application::env("REDIS_HOST"), \application::env("REDIS_PORT"));
                 $this->cache->enable_log($this->log);
@@ -59,21 +63,33 @@ class base {
 
     private function load_classes ($class_name) {
 
-        if(!helper::instr($class_name, "models\\")) {
+        $level1_path = false;
+
+        if(substr($class_name,0,7)=="models\\"){
+            $level1_path = KKF_MODELS_PATH;
+            $class_name = substr($class_name,7);
+        }
+
+        if(substr($class_name,0,12)=="controllers\\"){
+            $level1_path = KKF_CONTROLLERS_PATH;
+            $class_name= substr($class_name,12);
+        }
+
+        if(!$level1_path){
             return;
         }
 
-        $class_name = str_replace("models\\", "", $class_name);
-        $filename = KKF_MODELS_PATH . "/" . $class_name . ".class.php";
+        $class_filename = str_replace("\\",DIRECTORY_SEPARATOR,$class_name);
+        $class_filename = $level1_path.DIRECTORY_SEPARATOR.$class_filename.".class.php";
 
-        if(file_exists($filename)) {
-            require_once $filename;
+        if(file_exists($class_filename)) {
+            require_once $class_filename;
             return;
         } else {
-            echo "class " . htmlentities($class_name) . " file not found : " . htmlentities($filename);
-            $this->log->error("class " . $class_name . " file not found : " . $filename);
-            return;
+            $this->log->fatal("class $class_name file not found : " . htmlentities($class_filename));
+            throw new Exception("class $class_name file not found : " . htmlentities($class_filename));
         }
+        return;
     }
 
     final protected function load_lib ($lib_name) {
@@ -86,36 +102,10 @@ class base {
         }
 
         $lib = $libs->{$lib_name};
-        require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . $lib;
-        return;
 
-        switch ($lib_name) {
-            case "log":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'ezlog.class.php';
-                $this->get_log_connect();
-                break;
-            case "cache":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'ezcache.class.php';
-                $this->get_cache_connect();
-                break;
-            case "input":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'input.class.php';
-                $this->input = new \input();
-                break;
-            case "output":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'output.class.php';
-                $this->output = new \output();
-                break;
-            case "wechat":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'wechat.class.php';
-                break;
-            case "view":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'ezview.class.php';
-                return;
-            case "rest_client":
-                require_once PFW_LIBS_PATH . DIRECTORY_SEPARATOR . 'rest_client.class.php';
-                return;
-        }
+        require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . $lib;
+
+        return;
     }
 
     final protected function force_ssl ($is_ssl = true) {

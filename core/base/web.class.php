@@ -1,18 +1,14 @@
 <?php
-namespace controllers;
 
-class web extends \base {
+class web extends \http{
 
 	protected $view = false;
 	
 	function __construct(){
 		parent::__construct();
-		if(!\application::is_web_request()){
-			$this->log->fatal("not web request");
-			throw new \Exception("not web request!");
-			return;
+		if(!is_object($this->view)){
+			$this->load_lib("view");
 		}
-		$this->load_lib("view");
 	}
 
 

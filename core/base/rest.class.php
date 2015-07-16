@@ -1,11 +1,4 @@
 <?php
-namespace controllers;
-
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
-
 class rest extends \base {
 	
 	protected $access_token = false;
