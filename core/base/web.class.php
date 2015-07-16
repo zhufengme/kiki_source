@@ -26,8 +26,7 @@ class web extends \http{
 			die;
 		}
 		$default_device = strtolower($default_device);
-		$default_lang = strtolower($default_lang);
-		
+
 		$lang = $this->get_lang();
 		if(!$lang){
 			$lang= $default_lang;
@@ -56,7 +55,7 @@ class web extends \http{
 	
 	private function get_lang(){
 	
-		$user_choice_lang=strtolower(\helper::get_value_from_array($this->input->http_get,'lang'));
+		$user_choice_lang=\helper::get_value_from_array($this->input->http_get,'lang');
 		if($user_choice_lang){
 			if(strstr(PFW_ALLOW_LANGS, $user_choice_lang)){
 				$this->output->set_cookie("lang",$user_choice_lang,60*60*24*30);
@@ -64,18 +63,17 @@ class web extends \http{
 			}
 		}
 	
-		$user_choice_lang=strtolower($this->input->get_cookie("lang"));
+		$user_choice_lang=$this->input->get_cookie("lang");
 		if($user_choice_lang){
 			if(strstr(PFW_ALLOW_LANGS, $user_choice_lang)){
 				return $user_choice_lang;
 			}
 		}
-	
-		$str=strtolower(\helper::get_value_from_array($this->input->http_server, 'HTTP_ACCEPT_LANGUAGE'));
+
+		$str= strtolower(\helper::get_value_from_array($this->input->http_server, 'HTTP_ACCEPT_LANGUAGE'));
 		if(!$str){
 			return false;
 		}
-		$str=strtolower($str);
 		$arr=explode(",", $str);
 		if(!$arr[0]){
 			return false;

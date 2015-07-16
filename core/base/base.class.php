@@ -44,7 +44,9 @@ class base {
     }
 
     protected function fatal ($message) {
-        $this->log->fatal($message);
+        if(is_object($this->log)) {
+            $this->log->fatal($message);
+        }
         throw new \Exception($message);
         die;
     }

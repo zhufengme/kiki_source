@@ -64,8 +64,10 @@ final class application {
         define('KKF_PLUGINS_PATH', KKF_CORE_PATH . DIRECTORY_SEPARATOR . "plugins");
         define('KKF_BASE_PATH', KKF_CORE_PATH . DIRECTORY_SEPARATOR . "base");
         define('KKF_VIEWS_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "views");
-        define('KKF_CACHE_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "cache");
+
         define('KKF_STORE_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "store");
+        define('KKF_CACHE_PATH', KKF_STORE_PATH . DIRECTORY_SEPARATOR . "cache");
+
         define('KKF_CONFIG_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "config");
         define('KKF_WEB_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "web");
 

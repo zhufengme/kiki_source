@@ -1,6 +1,6 @@
 <?php
 
-if(!PFW_INIT){
+if(!KKF_INIT){
 	echo "break in";
 	die;
 }
@@ -25,29 +25,28 @@ class ezview {
 
 		$this->view = new \Smarty();
 		$this->view_name = $view_name;
-		$this->view_path = PFW_TPLS_PATH . DIRECTORY_SEPARATOR . $view_name ;
+		$this->view_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name ;
 		if(!file_exists($this->view_path)){
 			throw new Exception("view path not found :" . $this->view_path);
 			return false;
 		}
 		
-		$this->lang = strtolower($lang);
+		$this->lang = $lang;
 		$this->device = strtolower($device);
 		$default_lang = strtolower($default_lang);
-		$default_device = strtolower($default_device);
-		
-		$this->lang_file = PFW_TPLS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$this->lang}.php";
+
+		$this->lang_file = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$this->lang}.php";
 		if(!file_exists( $this->lang_file )){
-			$this->lang_file = PFW_TPLS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$default_lang}.php";
+			$this->lang_file = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$default_lang}.php";
 		}
 		if(!file_exists( $this->lang_file )){
 			throw new Exception("default lang not found : {$this->lang_file}");
 			die;
 		}
 		
-		$this->tpl_path = PFW_TPLS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $this->device;
+		$this->tpl_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $this->device;
 		if(!file_exists( $this->tpl_path )){
-			$this->tpl_path = PFW_TPLS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $default_device;
+			$this->tpl_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $default_device;
 		}
 		if(!file_exists( $this->tpl_path )){
 			throw new Exception("default tpl path not found : {$this->tpl_path} ");
@@ -56,7 +55,7 @@ class ezview {
 		
 		$this->cache_hash = $this->view_name . "-" . $this->lang . "-" . $this->device;
 		
-		$cache_path=PFW_CACHE_PATH . DIRECTORY_SEPARATOR . $this->cache_hash ;
+		$cache_path=KKF_CACHE_PATH . DIRECTORY_SEPARATOR . $this->cache_hash ;
 		$this->view->setTemplateDir($this->tpl_path);
 		helper::make_dir($cache_path."/compile/");
 		$this->view->setCompileDir($cache_path."/compile/");
@@ -78,7 +77,7 @@ class ezview {
 	}
 	
 	public function view_display($tpl_name){
-		if(!\application::is_web_request()){
+		if(!\application::is_http_request()){
 			throw new Exception("not is web request");
 			die;
 		}
@@ -90,7 +89,7 @@ class ezview {
 	
 	public function get_lang_string($key){
 		require_once $this->lang_file;
-		return helper::get_value_from_array($LANGS, $key);
+		return \helper::get_value_from_array($LANGS, $key);
 	}
 	
 	public function view_fetch($tpl_name){
