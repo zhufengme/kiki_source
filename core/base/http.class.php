@@ -11,8 +11,8 @@ class http extends \base {
         }
     }
 
-    final public function start () {
-        \controllers\routes::enter($this->path());
+    final public static function start () {
+        \controllers\routes::enter(self::path());
         return;
     }
 
@@ -91,7 +91,7 @@ class http extends \base {
         return false;
     }
 
-    protected function path () {
+    final public static function path () {
         if(!\application::is_http_request()) {
             return false;
         }

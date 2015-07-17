@@ -2,11 +2,6 @@
 namespace controllers;
 class routes extends \web {
 
-    function __construct() {
-        parent::__construct();
-        echo "load";
-    }
-
     final public static function enter($http_path){
 
         if(!$http_path) {

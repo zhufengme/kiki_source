@@ -13,7 +13,7 @@ class base {
 
     function __construct () {
         $this->timestamp = self::get_timestamp();
-        spl_autoload_register("self::load_classes");
+
 
         $this->load_lib("input");
         if(!is_object($this->input)) {
@@ -63,36 +63,7 @@ class base {
     }
 
 
-    private function load_classes ($class_name) {
 
-        $level1_path = false;
-
-        if(substr($class_name,0,7)=="models\\"){
-            $level1_path = KKF_MODELS_PATH;
-            $class_name = substr($class_name,7);
-        }
-
-        if(substr($class_name,0,12)=="controllers\\"){
-            $level1_path = KKF_CONTROLLERS_PATH;
-            $class_name= substr($class_name,12);
-        }
-
-        if(!$level1_path){
-            return;
-        }
-
-        $class_filename = str_replace("\\",DIRECTORY_SEPARATOR,$class_name);
-        $class_filename = $level1_path.DIRECTORY_SEPARATOR.$class_filename.".class.php";
-
-        if(file_exists($class_filename)) {
-            require_once $class_filename;
-            return;
-        } else {
-            $this->log->fatal("class $class_name file not found : " . htmlentities($class_filename));
-            throw new Exception("class $class_name file not found : " . htmlentities($class_filename));
-        }
-        return;
-    }
 
     final protected function load_lib ($lib_name) {
 

@@ -1,6 +1,7 @@
 <?php
 
 application::define_path();
+spl_autoload_register("application::load_classes");
 
 if((bool)(application::env("DEBUG"))) {
     error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
@@ -9,6 +10,8 @@ if((bool)(application::env("DEBUG"))) {
 }
 
 final class application {
+
+
     final static function env ($key) {
 
         if(!defined('KKF_ENV')) {
@@ -87,74 +90,6 @@ final class application {
         }
     }
 
-    final public static function load_controller () {
-
-        $parm = func_get_args();
-        $controller_target = \helper::get_value_from_array($parm, 0, false);
-        if(!$controller_target) {
-            die;
-        }
-
-        list($controller_name, $action_name) = explode("@", $controller_target);
-
-        if(!$action_name) {
-            $action_name = "main";
-        }
-
-        $param_string = null;
-        if(count($parm) > 1) {
-            for ($i = 1; $i < count($parm); $i++) {
-                $param_string .= $parm[$i] . ",";
-            }
-            $param_string = substr($param_string, 0, strlen($param_string) - 1);
-        }
-
-        if(!file_exists(KKF_CONTROLLERS_PATH . DIRECTORY_SEPARATOR . $controller_name . ".class.php")) {
-
-            if(self::is_http_request()) {
-                header("HTTP/1.1 404 controller " . htmlspecialchars($controller_name) . " not found");
-            } else {
-                echo "controller " . $controller_name . " not found \n";
-            }
-
-            die ();
-        }
-
-
-        require_once KKF_CONTROLLERS_PATH . DIRECTORY_SEPARATOR . $controller_name . '.class.php';
-
-        if(!class_exists("\\controllers\\{$controller_name}", false)) {
-
-            if(self::is_http_request()) {
-                header("HTTP/1.1 404 controller " . htmlspecialchars($controller_name) . " not define");
-            } else {
-                echo("controller " . $controller_name . " not define \n");
-            }
-
-            die ();
-        }
-
-        $controller = null;
-        $str = "\$controller=new \\controllers\\{$controller_name}();";
-        eval ($str);
-
-        if(!method_exists($controller, $action_name)) {
-            $action_name = "main";
-        }
-
-        if(!method_exists($controller, $action_name)) {
-            if(self::is_web_request()) {
-                header("HTTP/1.1 404 action_name " . htmlspecialchars($action_name) . " not define");
-            } else {
-                echo("action_name " . $action_name . " not define \n");
-            }
-            die();
-        }
-        $str = '$controller->' . $action_name . '(' . $param_string . ');';
-        eval ($str);
-        return;
-
-    }
 
     final private static function load_bases () {
         require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'helper.class.php';
@@ -180,8 +115,7 @@ final class application {
         self::load_bases();
 
         if(self::is_http_request()) {
-            $obj_http = new \http();
-            $obj_http->start();
+            \http::start();
             return;
         }
 
@@ -270,5 +204,33 @@ final class application {
         return;
 
     }
+    final public static function load_classes ($class_name) {
 
+        $level1_path = false;
+
+        if(substr($class_name,0,7)=="models\\"){
+            $level1_path = KKF_MODELS_PATH;
+            $class_name = substr($class_name,7);
+        }
+
+        if(substr($class_name,0,12)=="controllers\\"){
+            $level1_path = KKF_CONTROLLERS_PATH;
+            $class_name= substr($class_name,12);
+        }
+
+        if(!$level1_path){
+            return;
+        }
+
+        $class_filename = str_replace("\\",DIRECTORY_SEPARATOR,$class_name);
+        $class_filename = $level1_path.DIRECTORY_SEPARATOR.$class_filename.".class.php";
+
+        if(file_exists($class_filename)) {
+            require_once $class_filename;
+            return;
+        } else {
+            throw new Exception("class $class_name file not found : " . htmlentities($class_filename));
+        }
+        return;
+    }
 }
