@@ -15,11 +15,6 @@ class base {
         $this->timestamp = self::get_timestamp();
 
 
-        $this->load_lib("input");
-        if(!is_object($this->input)) {
-            $this->input = new \input();
-        }
-
         $this->load_lib("output");
         if(!is_object($this->output)) {
             $this->output = new \output();

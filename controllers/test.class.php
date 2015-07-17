@@ -5,7 +5,7 @@ class test extends \web{
 
 	public function main() {
 
-		print_r($this->server_parameters());
+		print_r($this->server());
 
 	}
 

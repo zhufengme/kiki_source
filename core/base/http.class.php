@@ -16,7 +16,11 @@ class http extends \base {
         return;
     }
 
-    protected function set_cookie($key,$value,$expire=null){
+    protected function post_raw(){
+        return file_get_contents("php://input");
+    }
+
+    protected function set_cookie($key,$value=null,$expire=null){
         if($expire===null){
             $expire = $this->timestamp;
         }else{
@@ -46,7 +50,7 @@ class http extends \base {
 
     }
 
-    protected function post_parameters($key = false){
+    protected function post($key = false){
         $posts = \helper::addslashes_deep($_POST);
         if(!$key) {
             return $posts;
@@ -57,7 +61,7 @@ class http extends \base {
         return false;
     }
 
-    protected function get_parameters($key = false){
+    protected function get($key = false){
         $gets = \helper::addslashes_deep($_GET);
         if(!$key) {
             return $gets;
@@ -77,7 +81,7 @@ class http extends \base {
         return $objua;
     }
 
-    protected function server_parameters ($key = false) {
+    protected function server ($key = false) {
         $servers = helper::addslashes_deep($_SERVER);
 
         if(!$key) {

@@ -145,65 +145,6 @@ final class application {
 
     }
 
-    final static function web_start () {
-
-        define('KKF_INIT', true);
-        self::load_bases();
-
-        if(!self::is_web_request()) {
-            echo("only for web request!\n");
-            die ();
-        }
-
-        /*
-
-        if ( \application::config("http")->session_auto_start ) {
-            session_start ();
-        }
-
-        $argvs = self::get_web_path ();
-        */
-
-        /*
-        if(!key_exists(0, $argvs)){
-            header("HTTP/1.1 403 REST verison not set");
-            echo "REST verison not set";
-            var_dump($argvs);
-            die;
-        }
-
-        if($argvs[0]!="v4"){
-            header("HTTP/1.1 403 REST verison error");
-            echo "REST verison error";
-            var_dump($argvs);
-            die;
-        }
-
-        if(!key_exists(1, $argvs)){
-            header("HTTP/1.1 403 REST object not set");
-            echo "REST object not set";
-            var_dump($argvs);
-            die;
-        }
-
-        $controller_name = $argvs[1];
-
-        $action_name = "index";
-
-        if(key_exists(2, $argvs)){
-            $action_name = $argvs[2];
-        }
-
-
-        self::load_controller ( $controller_name, $action_name );
-        */
-
-        new \controllers\web();
-
-
-        return;
-
-    }
     final public static function load_classes ($class_name) {
 
         $level1_path = false;
