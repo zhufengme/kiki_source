@@ -7,7 +7,7 @@ if(!KKF_INIT){
 
 require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'Smarty.class.php';
 
-class ezview {
+class kkview {
 	
 	private $view_name = false;
 	private $view = false;

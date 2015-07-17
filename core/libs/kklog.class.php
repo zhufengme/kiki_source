@@ -1,11 +1,5 @@
 <?php
 
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
-
-
 define("EZLOG_OUTPUT_CONSOLE",1);
 
 define("EZLOG_LOG_LEVEL_DEBUG",1);
@@ -14,7 +8,7 @@ define("EZLOG_LOG_LEVEL_WARN",3);
 define("EZLOG_LOG_LEVEL_ERROR",4);
 define("EZLOG_LOG_LEVEL_FATAL",5);
 
-class ezLog {
+class kklog {
 	
 	private $output = false;
 	private $format_prefix = "%d [%n] [%r] %v - ";

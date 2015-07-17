@@ -1,11 +1,11 @@
 {
   "libs":{
     "db":"database.class.php",
-    "log":"ezlog.class.php",
-    "cache":"ezcache.class.php",
+    "log":"kklog.class.php",
+    "cache":"kkcache.class.php",
     "input":"input.class.php",
     "output":"output.class.php",
-    "view":"ezview.class.php",
+    "view":"kkview.class.php",
     "ua":"user_agent.class.php"
   }
 }

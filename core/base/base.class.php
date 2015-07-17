@@ -23,7 +23,7 @@ class base {
         $this->load_lib("log");
         if((bool)\application::env("LOG_ENABLED")) {
             if(!is_object($this->log)) {
-                $this->log = new \ezLog(\application::env("LOG_FILENAME"));
+                $this->log = new \kklog(\application::env("LOG_FILENAME"));
                 $this->log->set_record_level(\application::env("LOG_LEVEL"));
             }
         }
@@ -31,7 +31,7 @@ class base {
         $this->load_lib("cache");
         if((bool)\application::env("CACHE_ENABLED")) {
             if(!is_object($this->cache)) {
-                $this->cache = new \ezcache(\application::env("REDIS_HOST"), \application::env("REDIS_PORT"));
+                $this->cache = new \kkcache(\application::env("REDIS_HOST"), \application::env("REDIS_PORT"));
                 $this->cache->enable_log($this->log);
             }
         }

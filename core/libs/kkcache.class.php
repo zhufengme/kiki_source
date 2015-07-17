@@ -1,5 +1,5 @@
 <?php
-class ezcache{
+class kkcache{
 	
 	private $redis = false;
 	private $log = false;

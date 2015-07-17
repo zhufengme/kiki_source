@@ -3,42 +3,28 @@
 class web extends \http{
 
 	protected $view = false;
-
+	private $view_name = false;
 
 	function __construct() {
 		parent::__construct();
-
 	}
 
 
-	protected function set_view($view_name,$default_lang,$default_device){
+	protected function set_view($view_name,$lang=false,$device=false){
 		if(!is_object($this->view)){
 			$this->load_lib("view");
 		}
-		if(!$default_lang){
-			throw new \Exception("default lang must be set");
-			die;
-		}
-		if(!$default_device){
-			throw new \Exception("default device must be set");
-			die;
-		}
-		if(!strstr(PFW_ALLOW_LANGS, $default_lang)){
-			throw new \Exception("default lang not allow");
-			die;
-		}
-		$default_device = strtolower($default_device);
+		$this->view_name= $view_name;
 
-		$lang = $this->get_lang();
 		if(!$lang){
-			$lang= $default_lang;
+			$lang = $this->get_lang();
 		}
-		$device = $this->get_device();
+
 		if(!$device){
-			$device= $default_device;
+			$device=$this->get_device();
 		}
-		
-		$this->view = new \ezview($view_name, $lang, $device, $default_lang, $default_device);
+
+		$this->view = new \kkview($view_name, $lang, $device);
 		
 		return ;
 	}
@@ -57,9 +43,9 @@ class web extends \http{
 	
 	private function get_lang(){
 	
-		$user_choice_lang=\helper::get_value_from_array($this->input->http_get,'lang');
+		$user_choice_lang=$this->get("lang");
 		if($user_choice_lang){
-			if(strstr(PFW_ALLOW_LANGS, $user_choice_lang)){
+			if(in_array($user_choice_lang,\ezview::get_support_langs($this->v))){
 				$this->output->set_cookie("lang",$user_choice_lang,60*60*24*30);
 				return $user_choice_lang;
 			}
