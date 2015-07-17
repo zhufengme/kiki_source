@@ -180,8 +180,8 @@ final class application {
         self::load_bases();
 
         if(self::is_http_request()) {
-            $objHttp = new \http();
-            $objHttp->start();
+            $obj_http = new \http();
+            $obj_http->start();
             return;
         }
 

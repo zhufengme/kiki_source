@@ -7,28 +7,18 @@ if(!PFW_INIT){
 class user_agent{
 	
 	private $match_rule = array();
-	private $user_agent = false;
-	private $device_type = false; 
-	
+	public $user_agent = false;
+	public $device_type = false;
+
+
+
 	function __construct($user_agent){
 		$this->user_agent = $user_agent;
 		$this->rule_init();
 		$this->match();
 		return;
 	}
-	
-	function __get($name){
-		switch ($name){
-			case 'device_type':
-				return $this->device_type;
-				break;
-			case 'user_agent':
-				return $this->user_agent;
-				break;
-		}
-		return;
-	}
-	
+
 	private function match(){
 		foreach($this->match_rule as $item){
 			if(strstr($this->user_agent, $item['key'])){
@@ -78,6 +68,16 @@ class user_agent{
 		$this->match_rule[]=$item;
 		
 		$item['key']='Macintosh';
+		$item['device_type']='smart_web';
+		$item['finish']=true;
+		$this->match_rule[]=$item;
+
+		$item['key']='Chrome';
+		$item['device_type']='smart_web';
+		$item['finish']=true;
+		$this->match_rule[]=$item;
+
+		$item['key']='Safari';
 		$item['device_type']='smart_web';
 		$item['finish']=true;
 		$this->match_rule[]=$item;

@@ -3,16 +3,18 @@
 class web extends \http{
 
 	protected $view = false;
-	
-	function __construct(){
+
+
+	function __construct() {
 		parent::__construct();
-		if(!is_object($this->view)){
-			$this->load_lib("view");
-		}
+
 	}
 
 
 	protected function set_view($view_name,$default_lang,$default_device){
+		if(!is_object($this->view)){
+			$this->load_lib("view");
+		}
 		if(!$default_lang){
 			throw new \Exception("default lang must be set");
 			die;

@@ -20,8 +20,9 @@ class ezview {
 	private $tpl_path = false;
 	
 	private $cache_hash = false;
-	
-	function __construct($view_name , $lang , $device , $default_lang , $default_device){
+
+
+	function __construct($view_name , $lang , $device = "default"){
 
 		$this->view = new \Smarty();
 		$this->view_name = $view_name;
@@ -33,21 +34,14 @@ class ezview {
 		
 		$this->lang = $lang;
 		$this->device = strtolower($device);
-		$default_lang = strtolower($default_lang);
 
 		$this->lang_file = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$this->lang}.php";
 		if(!file_exists( $this->lang_file )){
-			$this->lang_file = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . "langs.{$default_lang}.php";
-		}
-		if(!file_exists( $this->lang_file )){
-			throw new Exception("default lang not found : {$this->lang_file}");
+			throw new Exception("lang file not found : {$this->lang_file}");
 			die;
 		}
 		
 		$this->tpl_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $this->device;
-		if(!file_exists( $this->tpl_path )){
-			$this->tpl_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name . DIRECTORY_SEPARATOR . $default_device;
-		}
 		if(!file_exists( $this->tpl_path )){
 			throw new Exception("default tpl path not found : {$this->tpl_path} ");
 			return false;
@@ -104,6 +98,52 @@ class ezview {
 		$html = $this->view->fetch($tpl_name);
 		return $html;
 	}
-	
+
+	public static function get_support_langs($view_name){
+
+		$view_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name;
+		$result = false;
+
+		if(!is_dir($view_path)){
+			throw new Exception("view path not found");
+			return;
+		}
+
+		$obj_dir = dir($view_path);
+
+		while($file = $obj_dir->read()){
+			$lang = null;
+			if(substr($file,0,5)=='langs' && \helper::get_filetype($file)=='.php'){
+				$lang = substr($file,strpos($file,".")+1);
+				$lang = substr($lang,0,strrpos($lang,"."));
+				$result[]=$lang;
+			}
+		}
+
+		return $result;
+
+
+	}
+
+	public static function get_support_device($view_name){
+
+		$view_path = KKF_VIEWS_PATH . DIRECTORY_SEPARATOR . $view_name;
+		$result = false;
+
+		if(!is_dir($view_path)){
+			throw new Exception("view path not found");
+			return;
+		}
+
+		$obj_dir = dir($view_path);
+
+		while($file = $obj_dir->read()){
+			$full_filename = $view_path.DIRECTORY_SEPARATOR.$file;
+			if(is_dir($full_filename) && ($file!="..") && ($file!=".")){
+				$result[]=$file;
+			}
+		}
+		return $result;
+	}
 	
 }
