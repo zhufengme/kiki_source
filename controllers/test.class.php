@@ -5,7 +5,17 @@ class test extends \web{
 
 	public function main() {
 
-		print_r($this->server());
+		$en =  \kkcrypt::aes_cbc_encrypt("a","123");
+
+		$this->output->fatal($en);
+
+		$de = \kkcrypt::aes_cbc_decrypt($en,"123");
+
+		$this->output->fatal($de);
+
+
+
+		//print_r($this->server());
 
 	}
 

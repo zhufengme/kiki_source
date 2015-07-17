@@ -27,6 +27,10 @@ class http extends \base {
             $expire += $this->timestamp;
         }
 
+        if($value!==null){
+            $value=\kkcrypt::aes_cbc_encrypt($value,\application::env("APP_KEY"));
+        }
+
         $key = \application::env("COOKIE_PREFIX").$key;
 
         return setcookie($key,$value,$expire);
@@ -43,7 +47,9 @@ class http extends \base {
         $key = \application::env("COOKIE_PREFIX").$key;
 
         if(array_key_exists($key,$cookies)){
-            return $cookies[$key];
+            $result = $cookies[$key];
+            $result = \kkcrypt::aes_cbc_decrypt($result,\application::env("APP_KEY"));
+            return $result;
         }
 
         return false;

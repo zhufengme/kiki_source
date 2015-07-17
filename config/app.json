@@ -6,6 +6,7 @@
     "input":"input.class.php",
     "output":"output.class.php",
     "view":"kkview.class.php",
-    "ua":"user_agent.class.php"
+    "ua":"user_agent.class.php",
+    "crypt":"kkcrypt.class.php"
   }
 }

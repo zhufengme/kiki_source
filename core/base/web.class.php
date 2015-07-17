@@ -45,23 +45,25 @@ class web extends \http{
 	
 		$user_choice_lang=$this->get("lang");
 		if($user_choice_lang){
-			if(in_array($user_choice_lang,\ezview::get_support_langs($this->v))){
-				$this->output->set_cookie("lang",$user_choice_lang,60*60*24*30);
+			if(in_array($user_choice_lang,\kkview::get_support_langs($this->view_name))){
+				$this->set_cookie("lang",$user_choice_lang,60*60*24*30);
 				return $user_choice_lang;
 			}
 		}
 	
-		$user_choice_lang=$this->input->get_cookie("lang");
+		$user_choice_lang=$this->cookie("lang");
 		if($user_choice_lang){
-			if(strstr(PFW_ALLOW_LANGS, $user_choice_lang)){
+			if(in_array($user_choice_lang,\kkview::get_support_langs($this->view_name))){
 				return $user_choice_lang;
 			}
 		}
 
-		$str= strtolower(\helper::get_value_from_array($this->input->http_server, 'HTTP_ACCEPT_LANGUAGE'));
-		if(!$str){
-			return false;
+		$str_accept_lang = strtolower($this->server('HTTP_ACCEPT_LANGUAGE'));
+
+		if(!$str_accept_lang){
+			return "default";
 		}
+
 		$arr=explode(",", $str);
 		if(!$arr[0]){
 			return false;
@@ -71,6 +73,7 @@ class web extends \http{
 		if(strstr(PFW_ALLOW_LANGS, $brower_lang)){
 			return $brower_lang;
 		}
+
 	
 		if(strlen($brower_lang)>2){
 			$phylum=substr($brower_lang, 0,2);

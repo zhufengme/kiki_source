@@ -36,6 +36,8 @@ class base {
             }
         }
 
+        $this->load_lib("crypt");
+
     }
 
     protected function fatal ($message) {
