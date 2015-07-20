@@ -116,7 +116,7 @@ class kkview {
 			if(substr($file,0,5)=='langs' && \helper::get_filetype($file)=='.php'){
 				$lang = substr($file,strpos($file,".")+1);
 				$lang = substr($lang,0,strrpos($lang,"."));
-				$result[]=$lang;
+				$result[$lang]=$lang;
 			}
 		}
 
@@ -140,7 +140,7 @@ class kkview {
 		while($file = $obj_dir->read()){
 			$full_filename = $view_path.DIRECTORY_SEPARATOR.$file;
 			if(is_dir($full_filename) && ($file!="..") && ($file!=".")){
-				$result[]=$file;
+				$result[$file]=$file;
 			}
 		}
 		return $result;

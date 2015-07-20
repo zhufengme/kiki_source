@@ -49,7 +49,7 @@ class http extends \base {
         if(array_key_exists($key,$cookies)){
             $result = $cookies[$key];
             $result = \kkcrypt::aes_cbc_decrypt($result,\application::env("APP_KEY"));
-            return $result;
+            return trim($result);
         }
 
         return false;
@@ -81,8 +81,8 @@ class http extends \base {
     protected function user_agent () {
         $objua = false;
         $this->load_lib("ua");
-        if($this->server_parameters("HTTP_USER_AGENT")) {
-            $objua = new user_agent($this->server_parameters("HTTP_USER_AGENT"));
+        if($this->server("HTTP_USER_AGENT")) {
+            $objua = new user_agent($this->server("HTTP_USER_AGENT"));
         }
         return $objua;
     }

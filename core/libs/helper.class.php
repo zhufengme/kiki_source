@@ -267,8 +267,8 @@ class helper {
 				
 				if (! file_exists ( $base )) {
 					/* 尝试创建目录，如果创建失败则继续循环 */
-					if (@mkdir ( rtrim ( $base, '/' ), 0664 )) {
-						@chmod ( $base, 0664 );
+					if (@mkdir ( rtrim ( $base, '/' ), 0774 )) {
+						@chmod ( $base, 0774 );
 						$reval = true;
 					}
 				}

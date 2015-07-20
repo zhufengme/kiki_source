@@ -30,59 +30,97 @@ class web extends \http{
 	}
 	
 	private function get_device(){
-		$ua=$this->input->user_agent;
+
+		$arr_support_device = \kkview::get_support_device($this->view_name);
+		$ua=$this->user_agent();
+
 		if(!is_object($ua)){
-			return false;
+			$this->log->error("User_Agent fail");
+			return "default";
 		}
+
 		$device = $ua->device_type;
-		if($device){
-			return $device;
+		$key = array_search($device,$arr_support_device);
+		if(!$key){
+			return "default";
+		}else{
+			return $arr_support_device[$key];
 		}
-		return false;
+
 	}
 	
 	private function get_lang(){
 	
 		$user_choice_lang=$this->get("lang");
+		$arr_support_lang=\kkview::get_support_langs($this->view_name);
+
 		if($user_choice_lang){
-			if(in_array($user_choice_lang,\kkview::get_support_langs($this->view_name))){
+			if(array_search($user_choice_lang,$arr_support_lang)){
 				$this->set_cookie("lang",$user_choice_lang,60*60*24*30);
 				return $user_choice_lang;
 			}
 		}
-	
+
+
 		$user_choice_lang=$this->cookie("lang");
 		if($user_choice_lang){
-			if(in_array($user_choice_lang,\kkview::get_support_langs($this->view_name))){
+			if(array_search($user_choice_lang,$arr_support_lang)){
 				return $user_choice_lang;
 			}
 		}
 
+
 		$str_accept_lang = strtolower($this->server('HTTP_ACCEPT_LANGUAGE'));
 
 		if(!$str_accept_lang){
-			return "default";
+			return $arr_support_lang[0];
 		}
 
-		$arr=explode(",", $str);
-		if(!$arr[0]){
-			return false;
-		}
-		$brower_lang=$arr[0];
+		$arr_for_accept_lang_str = explode(",",$str_accept_lang);
+		$arr_accpet_lang = false;
 
-		if(strstr(PFW_ALLOW_LANGS, $brower_lang)){
-			return $brower_lang;
+		foreach($arr_for_accept_lang_str as $lang_str){
+			list($_lang) = explode(";",$lang_str);
+			$arr_accpet_lang[]=$_lang;
 		}
 
-	
-		if(strlen($brower_lang)>2){
-			$phylum=substr($brower_lang, 0,2);
-			if(strstr(PFW_ALLOW_LANGS,$phylum)){
-				return $phylum;
+
+		$lang_key = false;
+		foreach($arr_accpet_lang as $accept_lang){
+			$lang_key = array_search($accept_lang,$arr_support_lang);
+			if($lang_key){
+				return $arr_support_lang[$lang_key];
 			}
 		}
-		return false;
+
+
+		$arr_accpet_lang_short = false;
+		foreach($arr_for_accept_lang_str as $lang_str){
+			list($_lang) = explode(";",$lang_str);
+			list($_lang) = explode("-",$_lang);
+			$arr_accpet_lang_short[]=$_lang;
+		}
+
+		$arr_support_lang_short = false;
+		foreach($arr_support_lang as $_support_lang){
+			list($_lang) = explode("-",$_support_lang);
+			$arr_support_lang_short[]=$_lang;
+		}
+
+		$lang_key = false;
+		foreach($arr_accpet_lang_short as $accept_lang){
+			$lang_key = array_search($accept_lang,$arr_support_lang_short);
+			if($lang_key){
+				return $arr_support_lang[$lang_key];
+			}
+		}
+
+		return $arr_support_lang[0];
+
 	}
+
+
+
 	
 	
 	
