@@ -31,7 +31,7 @@ class console extends \base {
 
     }
 
-    protected function main_help(){
+    protected function main_help($added_text){
 
     }
 
