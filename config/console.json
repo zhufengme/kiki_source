@@ -1,0 +1,15 @@
+{
+  "cmds":{
+
+    "system":{
+      "test":{
+        "method":"system_commands@test",
+        "remark":"System level test commands"
+      },
+      "test2":{
+        "method":"system_commands@test2",
+        "remark":"System level test2 commands"
+      }
+    }
+  }
+}

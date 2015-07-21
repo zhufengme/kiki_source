@@ -26,8 +26,8 @@ class output {
         $this->color_line_text($text,"tips");
         return;
     }
-    public function line($text){
-        $this->color_line_text($text);
+    public function line($text,$color="default"){
+        $this->color_line_text($text,$color);
         return;
     }
 
@@ -42,19 +42,31 @@ class output {
         }
     }
 
-    private function color_line_text ($text, $color = "normal") {
+    private function color_line_text ($text, $color = "default") {
         $color_list_web = array(
             "success" => "#008000",
             "warn" => '#FFA500',
             "fatal" => '#FF0000',
             "tips" => '#0000FF',
-            "normal" => 'black'
+
+            "green" => "#008000",
+            "yellow" => '#FFA500',
+            "red" => '#FF0000',
+            "blue" => '#0000FF',
+
+            "normal" => 'default'
         );
         $color_list_console = array(
-            "success" => '\\033[32m',
+            "success" => '\033[32m',
             "warn" => '\033[33m',
             "fatal" => '\033[41;37m',
             "tips" => '\033[34m',
+
+            "green" => '\033[32m',
+            "yellow" => '\033[33m',
+            "red" => '\033[41;37m',
+            "blue" => '\033[34m',
+
             "normal" => '\033[37m'
         );
 

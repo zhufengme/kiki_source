@@ -1,7 +1,4 @@
 <?php
-if(!defined("KKF_INIT")) {
-    die("break in");
-}
 
 class base {
 

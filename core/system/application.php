@@ -98,6 +98,7 @@ final class application {
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'rest.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'web.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'models.class.php';
+        require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'console.class.php';
 
         //require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'input.class.php';
 
@@ -110,39 +111,17 @@ final class application {
         return;
     }
 
-    final static function start () {
+    final static function start ($argv=false) {
         define('KKF_INIT', true);
         self::load_bases();
 
         if(self::is_http_request()) {
             \http::start();
             return;
+        }else{
+            \console::start($argv);
+            return;
         }
-
-    }
-
-    final static function console_start ($argv, $argc) {
-
-        define('KKF_INIT', true);
-        self::load_bases();
-
-
-        $controller_name = helper::get_value_from_array($argv, 1, "console");
-        if(!$controller_name) {
-            echo("controller not set! \n");
-            die ();
-        }
-        $action_name = helper::get_value_from_array($argv, 2, "default_action");
-
-        if(self::is_web_request()) {
-            header("HTTP/1.1 403 only for console!");
-            die ();
-        }
-
-
-        self::load_controller($controller_name, $action_name);
-        return;
-
     }
 
     final public static function load_classes ($class_name) {
