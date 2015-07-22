@@ -47,12 +47,11 @@ final class application {
             return $obj;
         } else {
             if(!property_exists($obj, $key)) {
-                throw new Exception("property not found: {$key}");
-                die;
+                return false;
             }
             return $obj->{$key};
         }
-        return ;
+        return false;
     }
 
     final  static function define_path () {

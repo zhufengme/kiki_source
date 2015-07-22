@@ -10,6 +10,17 @@
         "method":"system_commands@test2",
         "remark":"System level test2 commands"
       }
+    },
+    "key":{
+      "generate":{
+        "method":"system_commands@test",
+        "remark":"Set the application key"
+      },
+      "del":{
+        "method":"system_commands@test",
+        "remark":"del the application key"
+      }
     }
+
   }
 }
