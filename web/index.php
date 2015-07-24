@@ -1,4 +1,4 @@
 <?php
-include_once '../core/system/application.php';
+include_once '../core/application.php';
 application::start();
 

@@ -56,9 +56,7 @@ final class application {
 
     final  static function define_path () {
 
-        define("KKF_ROOT_PATH", substr(__DIR__, 0, strlen(__DIR__) - 12));
-
-
+        define("KKF_ROOT_PATH", substr(__DIR__, 0, strlen(__DIR__) - 5));
         define("KKF_CORE_PATH", KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "core");
         define("KKF_CONTROLLERS_PATH", KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "controllers");
         define('KKF_LIBS_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "libs");

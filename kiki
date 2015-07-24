@@ -1,5 +1,5 @@
 #!/usr/bin/env php
 <?php
 set_time_limit (0);
-include_once 'core/system/application.php';
+include_once 'core/application.php';
 \application::start($argv);
