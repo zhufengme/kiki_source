@@ -118,5 +118,22 @@ class http extends \base {
 
     }
 
+    protected function set_http_code($newcode = 200){
+
+        static $code = 200;
+
+        if($newcode !== NULL){
+            header('X-PHP-Response-Code: '.$newcode, true, $newcode);
+            if(!headers_sent()){
+                $code = $newcode;
+            }
+        }
+        return $code;
+    }
+
+    protected function add_http_header ($key, $value) {
+        header("{$key}: {$value}");
+        return;
+    }
 
 }

@@ -1,12 +1,12 @@
 <?php
 
-define("EZLOG_OUTPUT_CONSOLE",1);
+define("KKF_LOG_OUTPUT_CONSOLE",1);
 
-define("EZLOG_LOG_LEVEL_DEBUG",1);
-define("EZLOG_LOG_LEVEL_INFO",2);
-define("EZLOG_LOG_LEVEL_WARN",3);
-define("EZLOG_LOG_LEVEL_ERROR",4);
-define("EZLOG_LOG_LEVEL_FATAL",5);
+define("KKF_LOG_LEVEL_DEBUG",1);
+define("KKF_LOG_LEVEL_INFO",2);
+define("KKF_LOG_LEVEL_WARN",3);
+define("KKF_LOG_LEVEL_ERROR",4);
+define("KKF_LOG_LEVEL_FATAL",5);
 
 class kklog {
 	
@@ -26,6 +26,7 @@ class kklog {
 	}
 	
 	public function set_record_level($level){
+
 		$this->record_level=$level;
 		return;
 	}
@@ -37,7 +38,7 @@ class kklog {
 		if(!$output){
 			$output=$this->output;
 		}
-		$this->write_log($str, $output, EZLOG_LOG_LEVEL_ERROR);
+		$this->write_log($str, $output, KKF_LOG_LEVEL_ERROR);
 		return;		
 	}
 	
@@ -48,18 +49,20 @@ class kklog {
 		if(!$output){
 			$output=$this->output;
 		}
-		$this->write_log($str, $output, EZLOG_LOG_LEVEL_DEBUG);
+		$this->write_log($str, $output, KKF_LOG_LEVEL_DEBUG);
 		return;
 	}
 	
 	public function info($str,$output=false){
+
 		if(!strstr($this->record_level, "INFO")){
 			return;
 		}
+
 		if(!$output){
 			$output=$this->output;
 		}
-		$this->write_log($str, $output, EZLOG_LOG_LEVEL_INFO);
+		$this->write_log($str, $output, KKF_LOG_LEVEL_INFO);
 		return;
 	}
 	
@@ -70,7 +73,7 @@ class kklog {
 		if(!$output){
 			$output=$this->output;
 		}
-		$this->write_log($str, $output, EZLOG_LOG_LEVEL_WARN);
+		$this->write_log($str, $output, KKF_LOG_LEVEL_WARN);
 		return;
 	}
 	
@@ -81,7 +84,7 @@ class kklog {
 		if(!$output){
 			$output=$this->output;
 		}
-		$this->write_log($str, $output, EZLOG_LOG_LEVEL_FATAL);
+		$this->write_log($str, $output, KKF_LOG_LEVEL_FATAL);
 		return;
 	}
 	
@@ -93,7 +96,7 @@ class kklog {
 
 		if(is_numeric($output)){
 			switch ($output){
-				case EZLOG_OUTPUT_CONSOLE:
+				case KKF_LOG_OUTPUT_CONSOLE:
 					echo $str . "\n";
 					return;
 			}
@@ -136,19 +139,19 @@ class kklog {
 		$str=str_replace("%r", round(((microtime(true)-$this->time_start) * 1000),4) , $str);
 		
 		switch ($level){
-			case EZLOG_LOG_LEVEL_DEBUG:
+			case KKF_LOG_LEVEL_DEBUG:
 				$str=str_replace("%v", "DEBUG", $str);
 				break;
-			case EZLOG_LOG_LEVEL_INFO:
+			case KKF_LOG_LEVEL_INFO:
 				$str=str_replace("%v", "INFO", $str);
 				break;			
-			case EZLOG_LOG_LEVEL_WARN:
+			case KKF_LOG_LEVEL_WARN:
 				$str=str_replace("%v", "WARN", $str);
 				break;	
-			case EZLOG_LOG_LEVEL_ERROR:
+			case KKF_LOG_LEVEL_ERROR:
 				$str=str_replace("%v", "ERROR", $str);
 				break;
-			case EZLOG_LOG_LEVEL_FATAL:
+			case KKF_LOG_LEVEL_FATAL:
 				$str=str_replace("%v", "FATAL", $str);
 				break;
 		}

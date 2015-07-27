@@ -92,17 +92,6 @@ class output {
         return;
     }
 
-    public function add_http_header ($key, $value) {
-        header("{$key}: {$value}");
-        return;
-    }
-
-    public function set_cookie ($key, $value, $expirein, $domain = "/") {
-        if(\application::is_http_request()) {
-            setcookie(PFW_COOKIE_PREFIX . $key, $value, time() + $expirein, "/");
-        }
-    }
-
     private function color_line_text ($text,$color=false) {
         $this->out($text,$color);
         if(!\application::is_http_request()){

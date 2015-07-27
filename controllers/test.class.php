@@ -1,9 +1,15 @@
 <?php
 namespace controllers;
 
-class test extends \web{
+class test extends \rest{
 
-	public function main() {
+
+	public function main(){
+		$this->api_response_error_message("10404");
+		return;
+	}
+
+	public function main1() {
 
 		$this->set_view("welcome");
 

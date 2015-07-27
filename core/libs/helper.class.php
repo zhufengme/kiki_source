@@ -37,23 +37,7 @@ class helper {
 		return $new_array;
 	}
 	
-	/**
-	 * 输出特定HTTP错误码
-	 * 
-	 * @param int $newcode
-	 * 
-	 */
-	public static function response_http_code($newcode){
-	
-		static $code = 200;
-		if($newcode !== NULL){
-			header('X-PHP-Response-Code: '.$newcode, true, $newcode);
-			if(!headers_sent()){
-				$code = $newcode;
-			}
-		}
-		return $code;
-	}	
+
 	/**
 	 * 
 	 * 通过起始标记，获取中间的内容

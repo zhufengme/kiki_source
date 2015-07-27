@@ -1,39 +1,39 @@
 <?php
-class rest extends \base {
+class rest extends \http {
 	
 	protected $access_token = false;
 	
 	function __construct(){
 		parent::__construct();
-		//$this->get_access_token();
+		$this->get_access_token();
 	}
 	
 	
 	private function get_access_token(){
 		
-		$Authorization = \helper::get_value_from_array($this->input->http_server, 'HTTP_AUTHORIZATION');
+		$Authorization = $this->server('HTTP_AUTHORIZATION');
 		if($Authorization){
 			if(substr($Authorization, 0,6)=="OAuth2"){
-				$arr_oauth2=explode(" ", $Authorization);
-				$access_token=\helper::get_value_from_array($arr_oauth2, 1);
+				list($_t,$access_token)=explode(" ", $Authorization);
 				$access_token=urldecode($access_token);
 				$this->access_token=$access_token;
 				return;
 			}
 		}
 		
-		$access_token = \helper::get_value_from_array($this->input->http_post,'access_token');
+		$access_token = $this->post('access_token');
 		if($access_token){
 			$this->access_token=$access_token;
 			return;
 		}
 		
-		$access_token = \helper::get_value_from_array($this->input->http_get,'access_token');
+		$access_token = $this->get('access_token');
 		if($access_token){
 			$this->access_token=$access_token;
 			return;
 		}
-		
+
+		return false;
 	}
 	
 	/**
@@ -44,13 +44,27 @@ class rest extends \base {
 	 *
 	 */
 	protected function api_response_error_message($error_code,$addin_msg = false){
-		$service = new \models\service();
-		$result = $service->get_error_info_by_code($error_code , $addin_msg);
-		$http_code = $result['http_code'];
-		unset($result['http_code']);
-		$this->api_response($result,$http_code,true);
-		die();
-		return;
+
+		$obj_result = \application::config("rest","errors");
+		if(!$obj_result){
+			throw new Exception("error setting not found, check rest.json file");
+			die;
+		}
+
+		if(!property_exists($obj_result,"{$error_code}")){
+			throw new Exception("error not found, check rest.json file");
+			die;
+		}
+
+		$obj_result = $obj_result->$error_code;
+
+
+		$result['error_code'] = $error_code;
+		$result['message'] = $obj_result->message . $addin_msg;
+		$http_code = $obj_result->http_code;
+
+		$this->api_response($result,$http_code);
+		die;
 	}
 	
 	/**
@@ -62,8 +76,9 @@ class rest extends \base {
 	 *
 	 */
 	protected function api_response($result,$http_code=200){
-	
-		\helper::response_http_code($http_code);
+
+
+		$this->set_http_code($http_code);
 	
 		$callback=$this->get_callback();
 		if(is_array($result) || is_object($result)){
@@ -72,41 +87,43 @@ class rest extends \base {
 			$json=$result;
 		}
 	
-		if(!\application::is_web_request()){
-			$this->output->out($json);
+		if(!\application::is_http_request()){
+			echo($json);
 			return;
 		}
+
 		if(!$callback){
-			header("Content-type: application/json");
+			$this->add_http_header("Content-type","application/json");
 		}else{
-			header("Content-type: text/javascript");
+			$this->add_http_header("Content-type", "text/javascript");
 			$json=$callback."(".$json;
 			$json=$json.");";
 		}
 		$this->add_acao();
 		$this->log->info("rsp: " . $json);
-		$this->output->out($json);
+		echo($json);
+
 		return;
 	}
 	
 	private  function get_callback(){
-		if(!\application::is_web_request()){
+		if(!\application::is_http_request()){
 			return false;
 		}
-		$callback=\helper::get_value_from_array($this->input->http_get, 'callback');
+		$callback=$this->get('callback');
 		if(!$callback){
-			$callback=\helper::get_value_from_array($this->input->http_post, 'callback');
+			$callback=$this->post('callback');
 		}
 		return $callback;
 	}
 	
 	private function add_acao(){		
-		$this->output->add_http_header("Cache-Control","no-cache");
-		$this->output->add_http_header("Access-Control-Allow-Origin", "*");
-		$this->output->add_http_header("Access-Control-Allow-Headers", "Authorization, DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
-		$this->output->add_http_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-		$this->output->add_http_header("Access-Control-Allow-Credentials", "true");
-		$this->output->add_http_header("Access-Control-Max-Age", "1728000");
+		$this->add_http_header("Cache-Control","no-cache");
+		$this->add_http_header("Access-Control-Allow-Origin", "*");
+		$this->add_http_header("Access-Control-Allow-Headers", "Authorization, DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
+		$this->add_http_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		$this->add_http_header("Access-Control-Allow-Credentials", "true");
+		$this->add_http_header("Access-Control-Max-Age", "1728000");
 		return;
 	}
 }
