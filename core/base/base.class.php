@@ -55,6 +55,7 @@ class base {
 
 
     function __get ($name) {
+        $result=false;
         $cmd_str = "\$result=\$this->get_{$name}();";
         eval($cmd_str);
         return $result;

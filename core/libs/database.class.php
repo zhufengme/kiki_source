@@ -1,9 +1,7 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
 
+require_once "ezsql/ez_sql_core.php";
+require_once "ezsql/ez_sql_mysql.php";
 
 class mysql {
 	

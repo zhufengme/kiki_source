@@ -1,6 +1,6 @@
 {
   "libs":{
-    "db":"database.class.php",
+    "ezsql":"database.class.php",
     "log":"kklog.class.php",
     "cache":"kkcache.class.php",
     "input":"input.class.php",

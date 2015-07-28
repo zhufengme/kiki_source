@@ -1,13 +1,8 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
-
 
 /**
  * 
- * JooMe Open API 调用类
+ *  API 调用类
  * @author zhufeng
  *
  */

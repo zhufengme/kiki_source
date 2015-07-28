@@ -60,7 +60,12 @@ class rest extends \http {
 
 
 		$result['error_code'] = $error_code;
-		$result['message'] = $obj_result->message . $addin_msg;
+		$result['message'] = $obj_result->message;
+
+		if($addin_msg) {
+			$result['message'] = $result['message']. " : {$addin_msg}";
+		}
+
 		$http_code = $obj_result->http_code;
 
 		$this->api_response($result,$http_code);
@@ -88,7 +93,7 @@ class rest extends \http {
 		}
 	
 		if(!\application::is_http_request()){
-			echo($json);
+			throw new Exception("REST request must http request");
 			return;
 		}
 
@@ -101,7 +106,7 @@ class rest extends \http {
 		}
 		$this->add_acao();
 		$this->log->info("rsp: " . $json);
-		echo($json);
+		$this->output->out($json,false,true);
 
 		return;
 	}

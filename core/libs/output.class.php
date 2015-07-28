@@ -6,7 +6,7 @@ class output {
 
     }
 
-    public function out ($text,$color=false) {
+    public function out ($text,$color=false,$no_htmlentities=false) {
         if(defined("KKF_OUTPUT_QUIET")){
             return;
         }
@@ -55,7 +55,7 @@ class output {
             }
         }
 
-        if(\application::is_http_request()){
+        if(\application::is_http_request() && (!$no_htmlentities)){
             $text = htmlentities($text);
         }
 
@@ -97,7 +97,7 @@ class output {
         if(!\application::is_http_request()){
             $this->out("\n");
         }else{
-            $this->out("<br/>");
+            $this->out("<br/>",$color,true);
         }
         return;
     }
