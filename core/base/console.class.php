@@ -15,6 +15,36 @@ class console extends \base {
         $this->parse_cmd_line();
     }
 
+    protected function stdin ($text, $color = false) {
+        $this->output->out($text, $color);
+        $input = trim(fgets(STDIN));
+        return $input;
+    }
+
+
+    protected function confirm ($text, $default = true, $color = false) {
+        if($default) {
+            $text .= " (Y/n) :";
+        } else {
+            $text .= " (N/y) :";
+        }
+        $this->output->out($text, $color);
+        $input = strtoupper(trim(fgets(STDIN)));
+        if($default) {
+            if($input == "N" || $input == "NO") {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if($input == "Y" || $input == "YES") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     private function parse_cmd_line () {
         if(count($this->argv) <= 1) {
             $this->display_main_help();
@@ -42,7 +72,7 @@ class console extends \base {
 
     final public static function start ($argv) {
         if(count($argv) <= 1) {
-            $argv[]="-h";
+            $argv[] = "-h";
             new \console($argv);
             return;
         }
@@ -94,8 +124,7 @@ class console extends \base {
 
     }
 
-    private
-    function display_version () {
+    private function display_version () {
         $obj_config = \application::config("app");
         $str_version = $obj_config->version;
 
@@ -107,8 +136,7 @@ class console extends \base {
         return;
     }
 
-    public
-    function display_main_help () {
+    public function display_main_help () {
         $this->display_version();
         $this->output->line();
         $this->output->line("Usage:", "yellow");

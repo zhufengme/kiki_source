@@ -5,9 +5,9 @@ class test extends \rest{
 
 
 	public function main(){
-		var_dump(\PDO::getAvailableDrivers());
-//		$obj = new \models\test();
-//		$this->output->success($obj->main(10));
+//		var_dump(\PDO::getAvailableDrivers());
+		$obj = new \models\test();
+		$this->output->success($obj->main(10));
 	}
 
 
