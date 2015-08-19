@@ -15,11 +15,11 @@ final class application {
     final static function env ($key) {
 
         if(!defined('KKF_ENV')) {
-            if(!is_readable(KKF_ROOT_PATH . DIRECTORY_SEPARATOR . ".env")) {
+            if(!is_readable(KKF_ENV_FILE)) {
                 die(".env file not found");
             }
 
-            $_env_string = file_get_contents(KKF_ROOT_PATH . DIRECTORY_SEPARATOR . ".env");
+            $_env_string = file_get_contents(KKF_ENV_FILE);
 
             define("KKF_ENV", $_env_string);
 
@@ -70,6 +70,8 @@ final class application {
 
         define('KKF_CONFIG_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "config");
         define('KKF_WEB_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "web");
+
+        define('KKF_ENV_FILE', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . ".env");
 
 
         return;

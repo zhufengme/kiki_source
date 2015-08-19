@@ -13,8 +13,8 @@
     },
     "key":{
       "generate":{
-        "method":"system_commands@test",
-        "remark":"Set the application key"
+        "method":"system_commands@key_generate",
+        "remark":"Generate or reset the application key"
       },
       "del":{
         "method":"system_commands@test",

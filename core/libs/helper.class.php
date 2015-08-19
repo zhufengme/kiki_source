@@ -11,6 +11,32 @@ if(!defined("KKF_INIT")){
  */
 
 class helper {
+
+
+	/**
+	 * 将数组写入 ini 文件
+	 * @param array $arr 待写入的数组
+	 * @param string $filename 目标ini文件
+	 */
+
+	public static function write_ini($arr , $filename){
+
+		$str_data = null;
+
+		foreach($arr as $key => $value){
+			$str_data .= $key;
+			$str_data .= " = ";
+			if(strstr($value,"|") || strstr($value,"\\") || strstr($value,"/")){
+				$str_data .= "\"". $value . "\"";
+			}else{
+				$str_data .=  $value ;
+			}
+			$str_data.="\n";
+		}
+
+		file_put_contents($filename,$str_data);
+		return;
+	}
 	
 	/**
 	 * 二维数组排序
