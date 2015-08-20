@@ -70,6 +70,8 @@ final class application {
 
         define('KKF_CONFIG_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "config");
         define('KKF_WEB_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "web");
+        define('KKF_VENDOR_PATH', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . "vendor");
+
 
         define('KKF_ENV_FILE', KKF_ROOT_PATH . DIRECTORY_SEPARATOR . ".env");
 

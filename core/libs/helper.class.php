@@ -14,6 +14,21 @@ class helper {
 
 
 	/**
+	 * 判断是否为合法变量名
+	 *
+	 * @param string $str 待验证字符串
+	 */
+
+	public static function is_vaild_name($str){
+		if(preg_match('/^[a-zA-Z][a-zA-Z0-9_]{4,20}$/',$str)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
+	/**
 	 * 将数组写入 ini 文件
 	 * @param array $arr 待写入的数组
 	 * @param string $filename 目标ini文件

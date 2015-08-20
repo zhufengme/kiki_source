@@ -11,16 +11,30 @@
         "remark":"System level test2 commands"
       }
     },
-    "key":{
-      "generate":{
-        "method":"system_commands@key_generate",
-        "remark":"Generate or reset the application key"
-      },
-      "del":{
-        "method":"system_commands@test",
-        "remark":"del the application key"
+    "key": {
+      "generate": {
+        "method": "system_commands@key_generate",
+        "remark": "Generate or reset the application key"
       }
-    }
+    },
+    "make":{
+      "console":{
+        "method":"system_commands@make_console",
+        "remark":"Create a new console controller class"
+      },
+      "web":{
+        "method":"system_commands@make_web",
+        "remark":"Create a new web controller class"
+      },
+      "rest":{
+        "method":"system_commands@make_rest",
+        "remark":"Create a new REST controller class"
+      },
+      "model":{
+        "method":"system_commands@make_model",
+        "remark":"Create a new model class"
+      }
 
+    }
   }
 }
