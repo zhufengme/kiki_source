@@ -2,7 +2,7 @@
   "cmds":{
 
     "system":{
-      "test":{
+      "clear-":{
         "method":"system_commands@test",
         "remark":"System level test commands"
       },
