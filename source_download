@@ -1,0 +1,87 @@
+set_time_limit(0);
+
+$str_url = "http://7xl97e.dl1.z0.glb.clouddn.com/kiki_framework_1.0_20150821.tar.gz";
+
+$str_deploy_path = null;
+$is_update_mode = false;
+
+if(!array_key_exists(1, $argv)) {
+    $str_deploy_path = "kiki_" . rand(1000, 9999);
+    echo "Undefined target directory.\n";
+    echo "Automatically assigns directory: ./{$str_deploy_path}\n";
+} else {
+    $str_deploy_path = trim($argv[1]);
+}
+
+if(!is_vaild_name($str_deploy_path)) {
+    echo "ERROR: Target directory name illegal.\n";
+    die;
+}
+
+if(file_exists($str_deploy_path)) {
+    echo "Target directory is existed , Try update mode...\n";
+    if(file_exists("{$str_deploy_path}/.env") && file_exists("{$str_deploy_path}/config") && file_exists("{$str_deploy_path}/core/base") && file_exists("{$str_deploy_path}/kiki")) {
+        echo "It looks like a target directory kiki framework.\n";
+        echo "update mode has been activated.\n";
+        $is_update_mode = true;
+    } else {
+        echo "ERROR: Target directory is existed and it looks like not kiki framework.\n";
+        die;
+    }
+}
+
+$str_unpack_path = null;
+if($is_update_mode) {
+    $str_unpack_path = "." . rand(10000, 99999) . "_kiki";
+} else {
+    $str_unpack_path = $str_deploy_path;
+}
+
+mkdir($str_unpack_path);
+
+echo "Downloading...";
+shell_exec("curl -so {$str_unpack_path}/kiki.tar.gz {$str_url}");
+echo "done.\n";
+
+echo "Unpacking...";
+shell_exec("tar zxf {$str_unpack_path}/kiki.tar.gz -C {$str_unpack_path}");
+echo "done.\n";
+
+echo "Initting...\n";
+shell_exec("rm {$str_unpack_path}/kiki.tar.gz");
+
+if($is_update_mode) {
+    shell_exec("rm `ls {$str_unpack_path}/config/* | egrep -v system.json`");
+    shell_exec("rm {$str_unpack_path}/.env.sample");
+    shell_exec("rm {$str_unpack_path}/.gitignore");
+    shell_exec("rm {$str_unpack_path}/.new");
+    shell_exec("rm {$str_unpack_path}/deploy.sh");
+    shell_exec("cp -Rf {$str_unpack_path}/* {$str_deploy_path}/");
+    shell_exec("rm -Rf {$str_unpack_path}");
+    echo "Update path: ./{$str_deploy_path}.\n";
+    echo "Update is succeed.\n";
+
+} else {
+
+
+    shell_exec("cp {$str_deploy_path}/.env.sample {$str_deploy_path}/.env");
+
+    shell_exec("chmod +x {$str_deploy_path}/deploy.sh");
+    shell_exec("chmod +x {$str_deploy_path}/kiki");
+    shell_exec("chmod -R a+w {$str_deploy_path}/store/cache");
+
+    shell_exec("cd {$str_deploy_path};./kiki key:generate");
+    shell_exec("cd {$str_deploy_path};./deploy.sh");
+
+
+    echo "Install path: ./{$str_deploy_path}.\n";
+    echo "Install is succeed.\n";
+}
+
+function is_vaild_name ($str) {
+    if(preg_match('/^[a-zA-Z][a-zA-Z0-9_.]{1,20}$/', $str)) {
+        return true;
+    } else {
+        return false;
+    }
+}

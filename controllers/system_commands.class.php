@@ -3,8 +3,9 @@ namespace controllers;
 
 class system_commands extends \console{
 
-    public function test(){
-        var_dump($this->stdin("input","blue"));
+    public function sample(){
+        $this->output->line("this is a sample console application.","blue");
+        return;
     }
 
     public function key_generate(){

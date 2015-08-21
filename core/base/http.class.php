@@ -16,39 +16,44 @@ class http extends \base {
         return;
     }
 
-    protected function post_raw(){
+    protected function redirect($url){
+        $this->add_http_header("Location",$url);
+        return;
+    }
+
+    protected function post_raw () {
         return file_get_contents("php://input");
     }
 
-    protected function set_cookie($key,$value=null,$expire=null){
-        if($expire===null){
+    protected function set_cookie ($key, $value = null, $expire = null) {
+        if($expire === null) {
             $expire = $this->timestamp;
-        }else{
+        } else {
             $expire += $this->timestamp;
         }
 
-        if($value!==null){
-            $value=\kkcrypt::aes_cbc_encrypt($value,\application::env("APP_KEY"));
+        if($value !== null) {
+            $value = \kkcrypt::aes_cbc_encrypt($value, \application::env("APP_KEY"));
         }
 
-        $key = \application::env("COOKIE_PREFIX").$key;
+        $key = \application::env("COOKIE_PREFIX") . $key;
 
-        return setcookie($key,$value,$expire);
+        return setcookie($key, $value, $expire);
     }
 
-    protected function cookie($key=false){
+    protected function cookie ($key = false) {
 
-        $cookies = \helper::addslashes_deep ( $_COOKIE );
+        $cookies = \helper::addslashes_deep($_COOKIE);
 
-        if(!$key){
+        if(!$key) {
             return $cookies;
         }
 
-        $key = \application::env("COOKIE_PREFIX").$key;
+        $key = \application::env("COOKIE_PREFIX") . $key;
 
-        if(array_key_exists($key,$cookies)){
+        if(array_key_exists($key, $cookies)) {
             $result = $cookies[$key];
-            $result = \kkcrypt::aes_cbc_decrypt($result,\application::env("APP_KEY"));
+            $result = \kkcrypt::aes_cbc_decrypt($result, \application::env("APP_KEY"));
             return trim($result);
         }
 
@@ -56,7 +61,7 @@ class http extends \base {
 
     }
 
-    protected function post($key = false){
+    protected function post ($key = false) {
         $posts = \helper::addslashes_deep($_POST);
         if(!$key) {
             return $posts;
@@ -67,7 +72,7 @@ class http extends \base {
         return false;
     }
 
-    protected function get($key = false){
+    protected function get ($key = false) {
         $gets = \helper::addslashes_deep($_GET);
         if(!$key) {
             return $gets;
@@ -118,13 +123,13 @@ class http extends \base {
 
     }
 
-    protected function set_http_code($newcode = 200){
+    protected function set_http_code ($newcode = 200) {
 
         static $code = 200;
 
-        if($newcode !== NULL){
-            header('X-PHP-Response-Code: '.$newcode, true, $newcode);
-            if(!headers_sent()){
+        if($newcode !== NULL) {
+            header('X-PHP-Response-Code: ' . $newcode, true, $newcode);
+            if(!headers_sent()) {
                 $code = $newcode;
             }
         }

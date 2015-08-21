@@ -1,0 +1,39 @@
+{
+  "version":"1.0",
+
+  "cmds":{
+
+    "system":{
+      "check":{
+        "method":"system_commands@test",
+        "remark":"Check system status"
+      }
+    },
+    "key": {
+      "generate": {
+        "method": "system_commands@key_generate",
+        "remark": "Generate or reset the application key"
+      }
+    },
+    "make":{
+      "console":{
+        "method":"system_commands@make_console",
+        "remark":"Create a new console controller class"
+      },
+      "web":{
+        "method":"system_commands@make_web",
+        "remark":"Create a new web controller class"
+      },
+      "rest":{
+        "method":"system_commands@make_rest",
+        "remark":"Create a new REST controller class"
+      },
+      "model":{
+        "method":"system_commands@make_model",
+        "remark":"Create a new model class"
+      }
+
+    }
+  }
+
+}

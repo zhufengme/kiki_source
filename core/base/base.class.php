@@ -35,8 +35,8 @@ class base {
         $this->load_lib("crypt");
     }
 
-    function __destruct(){
-        if(is_object($this->log)){
+    function __destruct () {
+        if(is_object($this->log)) {
             $this->log->debug("instantiate is destroying");
         }
     }
@@ -55,13 +55,11 @@ class base {
 
 
     function __get ($name) {
-        $result=false;
+        $result = false;
         $cmd_str = "\$result=\$this->get_{$name}();";
         eval($cmd_str);
         return $result;
     }
-
-
 
 
     final protected function load_lib ($lib_name) {

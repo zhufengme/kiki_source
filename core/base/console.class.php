@@ -92,10 +92,12 @@ class console extends \base {
 
 
                 if(!property_exists($obj_config, $command_class)) {
-                    echo("command class define not found : $command_class \n\n");
-                    $obj_console = new \console($argv);
-                    $obj_console->display_main_help();
-                    return;
+                    $obj_config = \application::config("system", "cmds");
+                    if(!property_exists($obj_config, $command_class)) {
+                        echo("command class define not found : $command_class \n\n");
+                        $obj_console = new \console($argv);
+                        $obj_console->display_main_help();
+                    }
                 }
 
                 if(!property_exists($obj_config->$command_class, $command_method)) {
@@ -125,7 +127,7 @@ class console extends \base {
     }
 
     private function display_version () {
-        $obj_config = \application::config("app");
+        $obj_config = \application::config("system");
         $str_version = $obj_config->version;
 
         $this->output->out("KiKi", "fatal");
@@ -159,15 +161,15 @@ class console extends \base {
 
         $this->output->line("Available commands:", "yellow");
 
-        $obj_conf = \application::config("console", "cmds");
-        if(!property_exists($obj_conf, "system")) {
-            return false;
-        }
+        $obj_conf = \application::config("system", "cmds");
+        if(property_exists($obj_conf, "system")) {
 
-        $obj_conf_systems = $obj_conf->system;
-        foreach ($obj_conf_systems as $str_method_name => $obj_conf_system) {
-            $this->output->out("  " . $str_method_name . "\t\t\t", "green");
-            $this->output->line($obj_conf_system->remark);
+
+            $obj_conf_systems = $obj_conf->system;
+            foreach ($obj_conf_systems as $str_method_name => $obj_conf_system) {
+                $this->output->out("  " . $str_method_name . "\t\t\t", "green");
+                $this->output->line($obj_conf_system->remark);
+            }
         }
         foreach ($obj_conf as $str_conf_cmd => $obj_conf_methods) {
             if($str_conf_cmd != "system") {
@@ -176,6 +178,16 @@ class console extends \base {
                     $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
                     $this->output->line($obj_conf_method->remark);
                 }
+            }
+        }
+
+
+        $obj_conf = \application::config("console", "cmds");
+        foreach ($obj_conf as $str_conf_cmd => $obj_conf_methods) {
+            $this->output->line(" " . $str_conf_cmd, "yellow");
+            foreach ($obj_conf_methods as $str_conf_method_name => $obj_conf_method) {
+                $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
+                $this->output->line($obj_conf_method->remark);
             }
         }
     }
