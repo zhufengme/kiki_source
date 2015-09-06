@@ -154,4 +154,26 @@ final class application {
         }
         return;
     }
+
+    final public static function system_exec($str_cmd,$error = true,$background = false){
+
+        $str_cmd_prefix = "export LANG=en;";
+        $str_cmd_suffix = null;
+
+        if(!$error){
+            $str_cmd_suffix = " 2>/dev/null";
+        }
+        if($background){
+            $str_cmd_prefix = "nohup " . $str_cmd_prefix;
+            $str_cmd_suffix = " 1&2>/dev/null &";
+        }
+
+
+        $str_cmd = $str_cmd_prefix . $str_cmd . $str_cmd_suffix;
+
+        $str_result = shell_exec($str_cmd);
+
+        return $str_result;
+
+    }
 }

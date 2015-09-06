@@ -14,6 +14,22 @@ class helper {
 
 
 	/**
+	 * 取得指定长度的随机16进制字符串
+	 * @param int $int_str_len 字符串长度
+	 * @return string
+	 */
+
+	public static  function get_hex_rand($int_str_len){
+		$result = null;
+		for($i=0;$i<$int_str_len;$i++){
+			$int_rand=rand(0,255);
+			$str_hex = dechex($int_rand);
+			$result.=$str_hex;
+		}
+		return $result;
+	}
+
+	/**
 	 * 判断是否为合法变量名
 	 *
 	 * @param string $str 待验证字符串
