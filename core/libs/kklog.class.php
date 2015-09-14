@@ -89,8 +89,13 @@ class kklog {
 	}
 	
 	
-	private function write_log($str,$output,$level){
-		$str=$this->format_prefix . $str;
+	private function write_log($var,$output,$level){
+
+        if(!is_string($var)){
+            $var = serialize($var);
+        }
+
+		$str=$this->format_prefix . $var;
 
 		$str=$this->make_log_str($str,$level);
 

@@ -114,7 +114,7 @@ class helper {
 		$s1 = substr ( $str, $s, strlen ( $str ) );
 		$e = strpos ( $s1, $end ) - strlen ( $s1 );
 		$s2 = substr ( $s1, 0, $e );
-		return $s2;
+		return trim($s2);
 	}
 	
 	/**
