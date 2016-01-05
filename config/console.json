@@ -1,12 +1,17 @@
 {
-  "cmds":{
-
-    "user":{
-      "cmd":{
-        "method":"system_commands@sample",
-        "remark":"This is a sample section."
+  "cmds": {
+    "user": {
+      "cmd": {
+        "method": "system_commands@sample",
+        "remark": "This is a sample section."
       }
-
+    },
+    "_test": {
+      "test": {
+        "method": "dtest@test",
+        "remark": "This is a test section."
+      }
     }
+
   }
 }

@@ -18,6 +18,9 @@ class console extends \base {
     protected function stdin ($text, $color = false) {
         $this->output->out($text, $color);
         $input = trim(fgets(STDIN));
+        if($input==null){
+            return false;
+        }
         return $input;
     }
 
@@ -57,6 +60,8 @@ class console extends \base {
 
         if(array_search("--no-ansi", $this->argv)) {
             define("KKF_OUTPUT_NO_COLOR", true);
+        }else{
+            define("KKF_OUTPUT_NO_COLOR", false);
         }
 
         if(array_search("-V", $this->argv) || array_search("--version", $this->argv)) {
@@ -167,27 +172,34 @@ class console extends \base {
 
             $obj_conf_systems = $obj_conf->system;
             foreach ($obj_conf_systems as $str_method_name => $obj_conf_system) {
-                $this->output->out("  " . $str_method_name . "\t\t\t", "green");
-                $this->output->line($obj_conf_system->remark);
+                if(substr($str_method_name,0,1)!="_") {
+                    $this->output->out("  " . $str_method_name . "\t\t\t", "green");
+                    $this->output->line($obj_conf_system->remark);
+                }
             }
         }
         foreach ($obj_conf as $str_conf_cmd => $obj_conf_methods) {
-            if($str_conf_cmd != "system") {
+            if($str_conf_cmd != "system" && substr($str_conf_cmd,0,1)!="_") {
                 $this->output->line(" " . $str_conf_cmd, "yellow");
                 foreach ($obj_conf_methods as $str_conf_method_name => $obj_conf_method) {
-                    $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
-                    $this->output->line($obj_conf_method->remark);
+                    if(substr($str_conf_method_name,0,1)!="_") {
+                        $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
+                        $this->output->line($obj_conf_method->remark);
+                    }
                 }
             }
         }
 
-
         $obj_conf = \application::config("console", "cmds");
         foreach ($obj_conf as $str_conf_cmd => $obj_conf_methods) {
-            $this->output->line(" " . $str_conf_cmd, "yellow");
-            foreach ($obj_conf_methods as $str_conf_method_name => $obj_conf_method) {
-                $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
-                $this->output->line($obj_conf_method->remark);
+            if(substr($str_conf_cmd,0,1)!="_") {
+                $this->output->line(" " . $str_conf_cmd, "yellow");
+                foreach ($obj_conf_methods as $str_conf_method_name => $obj_conf_method) {
+                    if(substr($str_conf_method_name,0,1)!="_") {
+                        $this->output->out("  " . $str_conf_cmd . ":" . $str_conf_method_name . "\t\t", "green");
+                        $this->output->line($obj_conf_method->remark);
+                    }
+                }
             }
         }
     }
