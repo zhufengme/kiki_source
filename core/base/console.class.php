@@ -11,7 +11,6 @@ class console extends \base {
             $this->output->fatal("request not in console");
             return;
         }
-        $this->load_lib("ctable");
         $this->argv = $argv;
         $this->parse_cmd_line();
     }
