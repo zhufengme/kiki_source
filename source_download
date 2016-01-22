@@ -1,6 +1,6 @@
 set_time_limit(0);
 
-$str_url = "http://7xl97e.dl1.z0.glb.clouddn.com/kiki_framework_1.1_20160104.tar.gz";
+$str_url = "http://7xl97e.dl1.z0.glb.clouddn.com/kiki_framework_1.1_20160122.tar.gz";
 
 $str_deploy_path = null;
 $is_update_mode = false;

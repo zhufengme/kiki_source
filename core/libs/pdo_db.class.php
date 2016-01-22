@@ -1,11 +1,18 @@
 <?php
 
+define('OBJECT','OBJECT',true);
+define('ARRAY_A','ARRAY_A',true);
+define('ARRAY_N','ARRAY_N',true);
+define('ASSOC','ASSOC',true);
+
+
 class pdo_db {
 
     private $db = false;
     private $log = false;
 
     function __construct ($db_user, $db_password, $db_name, $db_host, $db_encoding='utf8') {
+
         $str_dsn = "mysql:dbname={$db_name};host={$db_host}";
         try {
             $this->db = new \PDO($str_dsn, $db_user, $db_password);
@@ -56,7 +63,11 @@ class pdo_db {
         $obj_s = false;
 
         try {
-            $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
+            if($output==OBJECT){
+                $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
+            }else{
+                $obj_s = $this->db->query($sql, \PDO::FETCH_ASSOC);
+            }
         } catch (\PDOException $e) {
             echo "DB Query error: $e->getMessage() \n";
             $this->write_log("DB Query error: $e->getMessage()", "error");
@@ -80,7 +91,12 @@ class pdo_db {
         $obj_s = false;
 
         try {
-            $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
+            if($output==OBJECT){
+                $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
+            }else{
+                $obj_s = $this->db->query($sql, \PDO::FETCH_ASSOC);
+            }
+
         } catch (\PDOException $e) {
             echo "DB Query error: $e->getMessage() \n";
             $this->write_log("DB Query error: $e->getMessage()", "error");
