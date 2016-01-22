@@ -1,22 +1,24 @@
 <?php
 
-define('OBJECT','OBJECT',true);
-define('ARRAY_A','ARRAY_A',true);
-define('ARRAY_N','ARRAY_N',true);
-define('ASSOC','ASSOC',true);
+define('OBJECT', 'OBJECT', true);
+define('ARRAY_A', 'ARRAY_A', true);
+define('ARRAY_N', 'ARRAY_N', true);
+define('ASSOC', 'ASSOC', true);
 
 
 class pdo_db {
 
     private $db = false;
     private $log = false;
+    private $arr_sqls = false;
 
-    function __construct ($db_user, $db_password, $db_name, $db_host, $db_encoding='utf8') {
+    function __construct ($db_user, $db_password, $db_name, $db_host, $db_encoding = 'utf8') {
 
         $str_dsn = "mysql:dbname={$db_name};host={$db_host}";
         try {
             $this->db = new \PDO($str_dsn, $db_user, $db_password);
-            $this->db -> exec("set NAMES $db_encoding");
+            $this->db->exec("set NAMES $db_encoding");
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
             echo "DB Connection error: $e->getMessage() \n";
             $this->write_log("DB Connection error: $e->getMessage()", "error");
@@ -24,6 +26,43 @@ class pdo_db {
         }
         return;
     }
+
+    public function add_trans_sql ($str_sql) {
+        $this->arr_sqls[] = $str_sql;
+    }
+
+    public function trans_commit () {
+
+        $result = true;
+
+        if(!$this->arr_sqls) {
+            $this->write_log("No sql queue existed.", "error");
+            throw new Exception("No sql queue existed.");
+        }
+
+        $this->db->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
+
+        $this->db->beginTransaction();
+        try {
+            foreach ($this->arr_sqls as $str_sql) {
+                $this->write_log("Trans-SQL: $str_sql");
+                $this->db->exec($str_sql);
+            }
+            $this->db->commit();
+        } catch (Exception $e){
+            $this->db->rollBack();
+            $this->write_log("Trans-SQL ERROR: $e->getMessage()");
+            $result=false;
+        }
+
+        $this->db->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);
+
+        $this->arr_sqls = false;
+
+        return $result;
+
+    }
+
 
     public function enable_log ($obj_log) {
         $this->log = $obj_log;
@@ -41,7 +80,7 @@ class pdo_db {
             $this->write_log("DB Query error: $e->getMessage()", "error");
         }
 
-        if(!$obj_s){
+        if(!$obj_s) {
             echo "DB Query error.\n";
             $this->write_log("DB Query error: $sql", "error");
             return false;
@@ -63,9 +102,9 @@ class pdo_db {
         $obj_s = false;
 
         try {
-            if($output==OBJECT){
+            if($output == OBJECT) {
                 $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
-            }else{
+            } else {
                 $obj_s = $this->db->query($sql, \PDO::FETCH_ASSOC);
             }
         } catch (\PDOException $e) {
@@ -73,7 +112,7 @@ class pdo_db {
             $this->write_log("DB Query error: $e->getMessage()", "error");
         }
 
-        if(!$obj_s){
+        if(!$obj_s) {
             echo "DB Query error.\n";
             $this->write_log("DB Query error: $sql", "error");
             return false;
@@ -91,9 +130,9 @@ class pdo_db {
         $obj_s = false;
 
         try {
-            if($output==OBJECT){
+            if($output == OBJECT) {
                 $obj_s = $this->db->query($sql, \PDO::FETCH_OBJ);
-            }else{
+            } else {
                 $obj_s = $this->db->query($sql, \PDO::FETCH_ASSOC);
             }
 
@@ -102,7 +141,7 @@ class pdo_db {
             $this->write_log("DB Query error: $e->getMessage()", "error");
         }
 
-        if(!$obj_s){
+        if(!$obj_s) {
             echo "DB Query error.\n";
             $this->write_log("DB Query error: $sql", "error");
             return false;
@@ -128,12 +167,12 @@ class pdo_db {
         return $result;
     }
 
-    public function get_insertid(){
+    public function get_insertid () {
         return $this->db->lastInsertId();
     }
 
     function __get ($name) {
-        switch($name){
+        switch ($name) {
             case 'insert_id':
                 return $this->get_insertid();
                 break;
