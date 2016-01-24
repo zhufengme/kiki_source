@@ -101,6 +101,13 @@ final class application {
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'models.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'console.class.php';
 
+        $db_method = \application::env("DB_METHOD");
+        if($db_method == "pdo") {
+            require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'pdo_db.class.php';
+        } else {
+            require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'database.class.php';
+        }
+
         //require_once KKF_LIBS_PATH . DIRECTORY_SEPARATOR . 'input.class.php';
 
         /*
