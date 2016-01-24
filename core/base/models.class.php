@@ -5,24 +5,17 @@ class models extends \base {
 
     function __construct () {
         parent::__construct();
-
-        $db_method = \application::env("DB_METHOD");
-        if($db_method == "pdo") {
-            $this->load_lib("pdo");
-        } else {
-            $this->load_lib("ezsql");
-        }
-
-        $this->db = self::get_db_connect();
-        $this->db->enable_log($this->log);
+        $this->db = self::get_db_connect($this->log);
+        
     }
 
     function __destruct () {
         //$this->db->close();
     }
 
-    protected static function get_db_connect () {
+    protected static function get_db_connect ($obj_log = false) {
         $db_method = \application::env("DB_METHOD");
+
         if($db_method == "pdo") {
             $db = new \pdo_db(\application::env("DB_USER"),
                 \application::env("DB_PASSWORD"),
@@ -35,6 +28,10 @@ class models extends \base {
                 \application::env("DB_NAME"),
                 \application::env("DB_HOST"),
                 "utf-8");
+        }
+
+        if($obj_log){
+            $db->enable_log($obj_log);
         }
 
         return $db;
