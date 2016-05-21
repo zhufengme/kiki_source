@@ -25,7 +25,7 @@
 
 在任何一个Linux系统的命令行下面，敲入如下命令即可安装
 
-`php -r "$(curl -fsSL http://kiki.zhufeng.me/install/1.1)" [path]`
+`php -r "$(curl -fsSL http://kiki.zhufeng.me/install/1.2)" [path]`
 
 唯一一个可选参数是path，用来指定框架的目标目录名，框架将安装到当前目录中的path子目录。该参数可以忽略，如忽略则应用将安装到一个随机目录。
 
@@ -39,8 +39,8 @@
 
 由于这个框架是给自己用的，所以都以自己的习惯来写，对多种外围工具的支持存在短板：
 
-*数据库只支持 mysql，采用一个内置的，基于pdo实现的数据库操作类访问数据库
-*缓存服务只支持 redis ，暂时不支持 memcache
+* 数据库只支持 mysql，采用一个内置的，基于pdo实现的数据库操作类访问数据库
+* 缓存服务只支持 redis ，暂时不支持 memcache
 
 ## 鸣谢
 
