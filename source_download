@@ -1,6 +1,6 @@
 set_time_limit(0);
 
-$str_url = "http://7xl97e.dl1.z0.glb.clouddn.com/kiki_framework_1.1_20160124.tar.gz";
+$str_url = "https://github.com/zhufengme/kiki_release/blob/master/kiki_framework_1.2_20160521.tar.gz?raw=true";
 
 $str_deploy_path = null;
 $is_update_mode = false;
