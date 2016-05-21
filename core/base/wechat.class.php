@@ -1,32 +1,54 @@
 <?php
-namespace controllers;
 
-
-class wechat extends \base {
+class wechat extends \http {
 	
 	private $wechat_request = false;
 	
 	function __construct(){
 		parent::__construct();
 		$this->load_lib("wechat");
-		$this->load_lib("cache");
-		$this->wechat_init();
+
+	}
+	
+    protected function get_oauth_access_token_by_code($str_code){
+        $str_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . \application::env("WECHAT_APPID"). "&secret=" .\application::env("WECHAT_APPSECRET") . "&code={$str_code}&grant_type=authorization_code";
+        $result = \helper::http_request($str_url);
+        if($result){
+            return json_decode($result,true);
+        }
+        return false;
+    }
+
+	protected function get_userinfo_by_oauth_access_token($str_oauth_access_token,$str_wechat_user_id){
+		$str_url = "https://api.weixin.qq.com/sns/userinfo?access_token={$str_oauth_access_token}&openid={$str_wechat_user_id}&lang=zh_CN ";
+		$result = \helper::http_request($str_url);
+		if($result){
+			return json_decode($result,true);
+		}
+		return false;
 	}
 	
 	protected function get_wechat_access_token(){
-		
-		if($this->cache->exists("wechat_access_token")){
-			return $this->cache->get("wechat_access_token");
-		}
-		
-		$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . WECHAT_APPID . "&secret=" . WECHAT_APPSECRET;
+
+        $cache_file = KKF_CACHE_PATH.DIRECTORY_SEPARATOR."WECHAT_ACCESS_TOKEN";
+        if(file_exists($cache_file)){
+            $str_json = file_get_contents($cache_file);
+            $result = json_decode($str_json,true);
+            if($result['expire_time']>$this->timestamp){
+                return $result['access_token'];
+            }
+        }
+
+		$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . application::env("WECHAT_APPID") . "&secret=" . application::env("WECHAT_APPSECRET");
 		$result = \helper::http_request($url);
 		$result = json_decode($result,true);
 		if(key_exists("access_token", $result)){
-			$this->cache->setex("wechat_access_token",$result['expires_in'],$result['access_token']);
-			return $result['access_token'];
+            $arr_cache['expire_time']= $this->timestamp+$result['expires_in'];
+            $arr_cache['access_token']= $result['access_token'];
+            $str_cache = json_encode($arr_cache);
+            file_put_contents($cache_file,$str_cache);
+            return $result['access_token'];
 		}
-		
 		
 		return false;
 	}
@@ -44,27 +66,16 @@ class wechat extends \base {
 		return;
 	} 
 	
-	private function wechat_init(){
-		$this->log->info("Wechat valid request: " . serialize($this->input->http_get));
-		if($this->input->http_post_raw){
-			if(!PFW_DEBUG_MODE){
-				$valid = $this->check_signature(false);
-				if(!$valid){
-					$this->output->out("Hello Hacker!");
-					die;
-				}
-				
-			}
-		}else{
-			$this->log->info("just is a valid");
-			$this->check_signature(true);
+	protected function wechat_receiver(){
+
+		if($this->get('echostr')){
+			$this->output->out($this->get('echostr'));
 			return;
 		}
 		
-		
-		if($this->input->http_post_raw){
-			$this->log->info("Wechat Request: \n" . $this->input->http_post_raw);
-			$this->wechat_request = new \wechat_request($this->input->http_post_raw);
+		if($this->post_raw()){
+			$this->log->info("Wechat Request: \n" . $this->post_raw());
+			$this->wechat_request = new \wechat_request($this->post_raw());
 			return;
 		}
 		
@@ -73,22 +84,22 @@ class wechat extends \base {
 		
 	}
 	
-	private function sync_menu(){
-		if(!WECHAT_MENU_STRUCT){
-			return false;
-		}
-		
-		$sum = $this->cache->get("wechat_menu_sum");
-		$currnet_sum = md5(WECHAT_MENU_STRUCT);
-		if($sum!=$currnet_sum){
-			$this->log->info("wechat menu updated");
-			$wechat_access_token = $this->get_wechat_access_token();
-			$this->log->info("wechat access_token : $wechat_access_token");
-			$wm=new \wechat_menu($wechat_access_token);
-			$result = $wm->create(WECHAT_MENU_STRUCT);
-			$this->log->info("wechat menu struct update : $result");
-			$this->cache->setex("wechat_menu_sum",86400,$currnet_sum);
-		} 
+	protected function sync_menu(){
+
+        $menu_struct = null;
+        if(!file_exists(KKF_CONFIG_PATH.DIRECTORY_SEPARATOR."wechat_menu.json")){
+            return false;
+        }else{
+            $menu_struct=file_get_contents(KKF_CONFIG_PATH.DIRECTORY_SEPARATOR."wechat_menu.json");
+        }
+
+        $wechat_access_token = $this->get_wechat_access_token();
+        $this->log->info("wechat access_token : $wechat_access_token");
+        $wm=new \wechat_menu($wechat_access_token);
+        $result = $wm->create($menu_struct);
+        $this->log->info("wechat menu struct update : $result");
+        return $result;
+
 	}
 	
 	private function check_signature($echo=false){

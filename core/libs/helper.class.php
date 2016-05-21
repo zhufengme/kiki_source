@@ -499,6 +499,7 @@ class helper {
 		curl_setopt ( $curl, CURLOPT_TIMEOUT, $timeout );
 		curl_setopt ( $curl, CURLOPT_CONNECTTIMEOUT, $timeout );
 		curl_setopt ( $curl, CURLOPT_URL, $url );
+		curl_setopt ($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 		if ($method == 'POST') {
 			curl_setopt ( $curl, CURLOPT_POST, 1 );
 			curl_setopt ( $curl, CURLOPT_POSTFIELDS, $data );

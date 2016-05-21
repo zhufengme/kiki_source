@@ -98,6 +98,7 @@ final class application {
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'http.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'rest.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'web.class.php';
+        require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'wechat.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'models.class.php';
         require_once KKF_BASE_PATH . DIRECTORY_SEPARATOR . 'console.class.php';
 

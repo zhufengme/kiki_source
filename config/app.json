@@ -8,7 +8,8 @@
     "view":"kkview.class.php",
     "ua":"user_agent.class.php",
     "crypt":"kkcrypt.class.php",
-    "pdo":"pdo_db.class.php"
+    "pdo":"pdo_db.class.php",
+    "wechat":"wechat.class.php"
   },
 
   "version":"1.1"

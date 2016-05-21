@@ -1,8 +1,5 @@
 <?php
-if(!PFW_INIT){
-	echo "break in";
-	die;
-}
+
 
 define("WECHAT_MSG_TYPE_IMAGE", "image");
 define("WECHAT_MSG_TYPE_TEXT", "text");
