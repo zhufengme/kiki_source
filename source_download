@@ -1,6 +1,7 @@
 set_time_limit(0);
 
 $str_url = "https://codeload.github.com/zhufengme/kiki_source/tar.gz/1.2";
+$str_ext_path = "kiki_source-1.2"
 
 $str_deploy_path = null;
 $is_update_mode = false;
@@ -39,16 +40,23 @@ if($is_update_mode) {
 
 mkdir($str_unpack_path);
 
+$str_temp_path = "/tmp/kiki_tmp_" . rand(1000,9999);
+
 echo "Downloading...";
-shell_exec("curl -sL -o {$str_unpack_path}/kiki.tar.gz {$str_url}");
+shell_exec("curl -sL -o {$str_temp_path}/kiki.tar.gz {$str_url}");
 echo "done.\n";
 
 echo "Unpacking...";
-shell_exec("tar zxf {$str_unpack_path}/kiki.tar.gz -C {$str_unpack_path}");
+shell_exec("cd {$str_temp_path};tar zxf kiki.tar.gz ");
+shell_exec("cd {$str_temp_path}/{$str_ext_path};tar cf kiki.tar *");
+shell_exec("cd {$str_temp_path}/{$str_ext_path};tar xf kiki.tar -C {$str_unpack_path}");
+
+
 echo "done.\n";
 
 echo "Initting...\n";
 shell_exec("rm {$str_unpack_path}/kiki.tar.gz");
+shell_exec("rm {$str_temp_path} -rf");
 
 if($is_update_mode) {
     shell_exec("rm `ls {$str_unpack_path}/config/* | egrep -v system.json`");
