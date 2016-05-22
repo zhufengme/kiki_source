@@ -25,7 +25,7 @@
 
 在任何一个Linux系统的命令行下面，敲入如下命令即可安装
 
-`php -r "$(curl -fsSL http://kiki.zhufeng.me/install/1.2)" [path]`
+`php -r "$(curl -fsSLN http://kiki.zhufeng.me/install/1.2)" [path]`
 
 唯一一个可选参数是path，用来指定框架的目标目录名，框架将安装到当前目录中的path子目录。该参数可以忽略，如忽略则应用将安装到一个随机目录。
 
