@@ -41,6 +41,7 @@ if($is_update_mode) {
 mkdir($str_unpack_path);
 
 $str_temp_path = "/tmp/kiki_tmp_" . rand(1000,9999);
+mkdir($str_temp_path);
 
 echo "Downloading...";
 shell_exec("curl -sL -o {$str_temp_path}/kiki.tar.gz {$str_url}");
