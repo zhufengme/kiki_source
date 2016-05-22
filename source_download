@@ -1,6 +1,6 @@
 set_time_limit(0);
 
-$str_url = "https://raw.githubusercontent.com/zhufengme/kiki_release/master/kiki_framework_1.2_20160521.tar.gz";
+$str_url = "https://github.com/zhufengme/kiki_source/releases/download/1.2.1/kiki_framework_1.2.1_20160522.tar.gz";
 
 $str_deploy_path = null;
 $is_update_mode = false;
@@ -40,7 +40,7 @@ if($is_update_mode) {
 mkdir($str_unpack_path);
 
 echo "Downloading...";
-shell_exec("curl -so {$str_unpack_path}/kiki.tar.gz {$str_url}");
+shell_exec("curl -sL -o {$str_unpack_path}/kiki.tar.gz {$str_url}");
 echo "done.\n";
 
 echo "Unpacking...";

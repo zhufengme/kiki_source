@@ -27,6 +27,7 @@ shell_exec("rm {$file_path}/models/dtest* -f");
 shell_exec("rm {$file_path}/controllers/dtest* -f");
 
 shell_exec("rm {$file_path}/source_* -f");
+shell_exec("rm {$file_path}/readme.md -f");
 shell_exec("touch {$file_path}/.new");
 
 shell_exec("tar zcf {$release_file} -C {$file_path} .");
