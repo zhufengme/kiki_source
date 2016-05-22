@@ -1,6 +1,6 @@
 set_time_limit(0);
 
-$str_url = "https://github.com/zhufengme/kiki_source/archive/1.2.tar.gz";
+$str_url = "https://codeload.github.com/zhufengme/kiki_source/tar.gz/1.2";
 
 $str_deploy_path = null;
 $is_update_mode = false;
