@@ -40,7 +40,7 @@ if($is_update_mode) {
 mkdir($str_unpack_path);
 
 echo "Downloading...";
-shell_exec("curl -so {$str_unpack_path}/kiki.tar.gz {$str_url}");
+shell_exec("curl -sL -o {$str_unpack_path}/kiki.tar.gz {$str_url}");
 echo "done.\n";
 
 echo "Unpacking...";
