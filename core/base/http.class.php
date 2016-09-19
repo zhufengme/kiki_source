@@ -114,6 +114,9 @@ class http extends \base {
         $result = false;
         foreach ($argvs as $argv) {
             if($argv) {
+                if(strstr($argv,"?")){
+                    $argv = explode("?",$argv)[0];
+                }
                 $result[] = $argv;
             }
         }

@@ -58,18 +58,19 @@ class rest extends \http {
 
 		$obj_result = $obj_result->$error_code;
 
-
-		$result['error_code'] = $error_code;
-		$result['message'] = $obj_result->message;
+		$obj_return = new stdClass();
+		$obj_return->error_code = $error_code;
+		$obj_return->message = $obj_result->message;
 
 		if($addin_msg) {
-			$result['message'] = $result['message']. " : {$addin_msg}";
+			$obj_return->message .= " : ". $addin_msg;
 		}
 
 		$http_code = $obj_result->http_code;
 
-		$this->api_response($result,$http_code);
+		$this->api_response($obj_return,$http_code);
 		die;
+
 	}
 	
 	/**

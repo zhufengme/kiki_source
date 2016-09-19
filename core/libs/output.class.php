@@ -11,7 +11,7 @@ class output {
             return;
         }
 
-        if(defined(KKF_OUTPUT_NO_COLOR)){
+        if(KKF_OUTPUT_NO_COLOR){
             $color=false;
         }
 

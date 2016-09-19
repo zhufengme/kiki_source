@@ -263,7 +263,7 @@ class kkcache{
 	public function get($key){
 		$serialize_data=$this->redis->get($key);
 		$result=unserialize($serialize_data);
-		$this->write_log("get cache {$key} is " . $result);
+		$this->write_log("get cache {$key} is " . serialize($result));
 		return $result;
 	}
 
