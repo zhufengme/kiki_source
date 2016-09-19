@@ -21,7 +21,6 @@ shell_exec("rm {$file_path}/.idea -rf");
 shell_exec("rm {$file_path}/.git -rf");
 shell_exec("rm {$file_path}/.env -f");
 shell_exec("rm {$file_path}/store/cache/* -rf");
-shell_exec("rm {$file_path}/models/.no-data -f");
 
 shell_exec("rm {$file_path}/models/dtest* -f");
 shell_exec("rm {$file_path}/controllers/dtest* -f");
