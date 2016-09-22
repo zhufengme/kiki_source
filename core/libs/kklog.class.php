@@ -91,6 +91,10 @@ class kklog {
 	
 	private function write_log($var,$output,$level){
 
+	    if(!KKF_LOG_ENABLED){
+	        return false;
+        }
+
         if(!is_string($var)){
             $var = serialize($var);
         }

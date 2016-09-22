@@ -10,7 +10,7 @@ class routes extends \web {
         }
 
         if($http_path[0]=="test"){
-           $test = new \controllers\test();
+           $test = new \controllers\dtest_http();
            $test->main();
         }
     }
