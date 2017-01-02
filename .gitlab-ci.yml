@@ -1,0 +1,8 @@
+package:
+  stage: deploy
+  only: 
+    - master
+  script:
+    - chmod +x source_package 
+    - ./source_package
+  
