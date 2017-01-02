@@ -1,5 +1,14 @@
 <?php
 
+define("KKF_HTTP_METHOD_GET","GET");
+define("KKF_HTTP_METHOD_POST","POST");
+define("KKF_HTTP_METHOD_PUT","PUT");
+define("KKF_HTTP_METHOD_DELETE","DELETE");
+define("KKF_HTTP_METHOD_PATCH","PATCH");
+define("KKF_HTTP_METHOD_HEAD","HEAD");
+define("KKF_HTTP_METHOD_OPTIONS","OPTIONS");
+
+
 class http extends \base {
 
     function __construct () {
@@ -19,6 +28,28 @@ class http extends \base {
     protected function redirect($url){
         $this->add_http_header("Location",$url);
         return;
+    }
+
+    protected function method(){
+        $str_method = false;
+        if(key_exists("_method",$this->post())){
+            $str_method = $this->post("_method");
+        }
+        if(key_exists("_method",$this->get())){
+            $str_method = $this->get("_method");
+        }
+        if(!$str_method){
+           $str_method = $_SERVER['REQUEST_METHOD'];
+        }
+
+        $str_method = strtoupper($str_method);
+
+        return $str_method;
+
+    }
+
+    protected function body(){
+        return $this->post_raw();
     }
 
     protected function post_raw () {

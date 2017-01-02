@@ -12,13 +12,10 @@ class base {
         $this->timestamp = self::get_timestamp();
 
         $this->load_lib("log");
-        if((bool)\application::env("LOG_ENABLED")) {
-            if(!is_object($this->log)) {
-                $this->log = new \kklog(\application::env("LOG_FILENAME"));
-                $this->log->set_record_level(\application::env("LOG_LEVEL"));
-                $this->log->debug("instantiate is creating");
-            }
-        }
+        define("KKF_LOG_ENABLED",\application::env("LOG_ENABLED"));
+        $this->log = new \kklog(\application::env("LOG_FILENAME"));
+        $this->log->set_record_level(\application::env("LOG_LEVEL"));
+        $this->log->debug("instantiate is creating");
 
         $this->load_lib("output");
         if(!is_object($this->output)) {
